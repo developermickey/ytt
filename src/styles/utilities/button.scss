@@ -1,0 +1,46 @@
+
+.u-btn{
+  font-weight: bold;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-size: 18px;
+  border-radius: 36px;
+  border-width: 0;
+  padding-right: 50px;
+  padding-left: 50px;
+  outline: none;
+  cursor: pointer;
+
+  &.is-block{
+    width: 100%;
+  }
+
+  &.is-dark{
+    color: #fff;
+  }
+
+  &.is-x-large{
+    height: 70px;
+  }
+  &.is-large{
+    height: 55px;
+  }
+  &.is-medium{
+    height: 50px;
+  }
+  &.is-small{
+    height: 40px;
+  }
+
+  &.is-bg-primary{
+    background-color: $clr-primary;
+  }
+  &.is-bg-blue{
+    background-color: $clr-blue;
+  }
+  &.is-bg-red{
+    background-color: $clr-red;
+  }
+}

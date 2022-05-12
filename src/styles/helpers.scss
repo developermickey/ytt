@@ -1,0 +1,29 @@
+.u-flex {
+  display: flex;
+  &.is-direction-column {
+    flex-direction: column;
+  }
+  &.is-direction-row {
+    flex-direction: row;
+  }
+  &.is-align-center {
+    align-items: center;
+  }
+  &.is-justify-center {
+    justify-content: center;
+  }
+}
+
+.u-margin-20 {
+  margin: 20px;
+}
+.u-margin-30 {
+  margin: 30px;
+}
+.u-padding-20{
+  padding: 20px;
+}
+
+.u-w-100 {
+  width: 100%;
+}

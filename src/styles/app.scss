@@ -1,0 +1,26 @@
+// @import "~normalize.css";
+// @import '../../node_modules/vuetify/src/styles/generic/_reset';//vuetify styles
+// @import '../../node_modules/vuetify/src/styles/generic/_elevation';//vuetify styles
+
+@import "vars";
+
+@import 'normalize-scss';
+@include normalize();
+
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+@import 'node_modules/bootstrap-vue/src/index.scss';
+
+@import "./base64";
+@import "./mixins";
+@import "./layout";
+@import "./utilities";
+
+@import "./lib/vue-scroll";
+
+// Routing transition
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s ease;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0;
+}

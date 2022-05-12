@@ -1,0 +1,57 @@
+@import "../mixins";
+.u-text-h1{
+  font-size: 64px;
+  font-weight: 300;
+}
+.u-text-h2{
+  font-size: 48px;
+  font-weight: 300;
+}
+.u-text-h3{
+  font-size: 30px;
+  font-weight: 300;
+}
+.u-text-h4{
+  font-size: 24px;
+  font-weight: 300;
+}
+.u-text-h5{}
+.u-text-h6{}
+
+.u-text-right{
+  text-align: right;
+}
+.u-text-left{
+  text-align-last: left;
+}
+.u-text-center{
+  text-align: center;
+}
+
+.u-font-weight-black{
+  font-weight: 900;
+}
+.u-font-weight-bold{
+  font-weight: 700;
+}
+.u-font-weight-medium{
+  font-weight: 500;
+}
+.u-font-weight-regular{
+  font-weight: 400;
+}
+.u-font-weight-light{
+  font-weight: 300;
+}
+.u-font-weight-thin{
+  font-weight: 100;
+}
+.u-font-italic{
+  font-style: italic;
+}
+
+@include media(">phone", "<=tablet") {
+  .u-text-h2{
+    font-size: 28px;
+  }
+}

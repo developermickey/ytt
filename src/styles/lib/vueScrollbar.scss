@@ -1,0 +1,56 @@
+.ps{
+    overflow:hidden!important;
+    overflow-anchor:none;
+    -ms-overflow-style:none;
+    touch-action:auto;
+    -ms-touch-action:auto;
+}
+.ps__rail-x{
+    height:15px;
+    bottom:0;
+}
+.ps__rail-x,.ps__rail-y{
+    transition:background-color .2s linear,opacity .2s linear;
+    -webkit-transition:background-color .2s linear,opacity .2s linear;
+    position:absolute;
+}
+
+.ps__rail-y{
+    width:1px;
+    right: 1px !important;
+    background-color: rgba(0,0,0, 0.1);
+}
+.ps--active-x>.ps__rail-x,.ps--active-y>.ps__rail-y{
+    display:block;
+}
+
+.ps__thumb-x{
+    transition:background-color .2s linear,height .2s ease-in-out;
+    -webkit-transition:background-color .2s linear,height .2s ease-in-out;
+    height:6px;
+    bottom:2px;
+}
+.ps__thumb-x,.ps__thumb-y{
+    background-color:#aaa;
+    border-radius:6px;
+    position:absolute;
+}
+.ps__thumb-y{
+    transition:background-color .2s linear,width .2s ease-in-out;
+    -webkit-transition:background-color .2s linear,width .2s ease-in-out;
+    width:3px;
+    right: -1px;
+    background-color: $clr-blue;
+}
+@supports (-ms-overflow-style:none){
+    .ps{
+        overflow:auto!important
+    }
+}
+@media (-ms-high-contrast:none),
+    screen and (-ms-high-contrast:active){
+    .ps{
+        overflow:auto!important
+    }
+}
+.ps-container{position:relative}

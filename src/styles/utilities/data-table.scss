@@ -1,0 +1,41 @@
+.u-data-table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  tbody tr {
+    border-top: 1px solid #1b3b95 !important;
+    border-bottom: 1px solid #1b3b95 !important;
+  }
+
+  &.is-striped {
+    tr:nth-child(even) {
+      background-color: #f8f8f8;
+    }
+  }
+
+  tbody > tr:hover,
+  &.is-striped tbody > tr:hover {
+    transition: all 0.15s ease-in-out;
+    background-color: $clr-blue;
+    // color: #fff;
+  }
+
+  svg {
+    fill: $clr-blue;
+  }
+  tr:hover svg {
+    fill: #fff;
+  }
+
+  td {
+    padding: 15px 0;
+    font-weight: 300;
+    // white-space: nowrap;
+  }
+  th {
+    padding: 22px 0;
+  }
+
+  &__action-btn {
+  }
+}

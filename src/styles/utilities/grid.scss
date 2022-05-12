@@ -1,0 +1,50 @@
+$gutter: 19px;
+
+.u-container{
+  max-width: 1308px;
+  width: 100%;
+  padding-left: $gutter;
+  padding-right: $gutter;
+}
+
+.u-row{
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  margin-right: -#{$gutter};
+  margin-left: -#{$gutter};
+}
+
+.u-col{
+  width: 100%;
+  padding: $gutter;
+}
+$cols: 12;
+@while $cols >= 1 {
+  .u-col-#{$cols}{
+    width: 100%;
+    padding-right: $gutter;
+    padding-left: $gutter;
+  }
+  $cols: $cols - 1;
+}
+
+.u-col{
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+$cols: 12;
+@while $cols >= 1 {
+  .u-col-#{$cols}{
+    flex: 0 0 #{$cols / 12 * 100%};
+    max-width: #{$cols / 12 * 100%};
+  }
+  $cols: $cols - 1;
+}
+
+.no-gutters>.u-col, 
+.no-gutters>[class*=u-col-] {
+  padding: 0;
+}
