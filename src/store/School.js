@@ -20,15 +20,6 @@ export default {
       await axios
         .get("admin/users?role=4")
         .then((response) => {
-          console.log(response.data);
-          response.data.forEach((element) => {
-            if (element.assigned_teacher !== null) {
-              element.assigned_teacher = element.assigned_teacher.filter(
-                (x) => x === "name"
-              );
-            }
-          });
-
           context.commit("SET_SCHOOL_LIST", response.data);
           context.commit("SET_LOADING", false);
         })

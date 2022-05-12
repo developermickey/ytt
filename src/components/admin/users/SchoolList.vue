@@ -1,6 +1,5 @@
 <template>
   <div class="u-container u-ml-auto u-mr-auto u-pt-15">
-    {{ schoolList }}
     <div v-if="loading">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
@@ -21,7 +20,11 @@
             <td class="">{{ item.city }}</td>
             <td class="">{{ item.principal_name }}</td>
             <td class="">{{ item.email }}</td>
-            <td class="">{{ item.assigned_teacher }}</td>
+            <td class="">
+              <div v-for="(i, index) in item.assigned_teacher" :key="index">
+                <p class="mx-4">{{ i.name }}</p>
+              </div>
+            </td>
             <td class="">
               <div class=" d-flex justify-content-center">
                 <UIconBtn
