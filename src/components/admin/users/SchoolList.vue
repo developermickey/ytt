@@ -34,7 +34,7 @@
                   icon-hover-color="blue"
                   bg-hover-color="white"
                   hoverable
-                  @click.native="viewOrder(item)"
+                  @click.native="viewSchool(item)"
                 >
                 </UIconBtn>
               </div>
@@ -91,8 +91,12 @@ export default {
   }),
 
   methods: {
-    viewOrder(item) {
-      this.$router.push(`/admin/order/details/${item.order_id}`);
+    viewSchool(item) {
+      this.$router.push({
+        name: "admin-school-create",
+        query: { id: item.id },
+      });
+      // this.$router.push({ to: `/create-school`, query: item.id });
     },
   },
   async mounted() {

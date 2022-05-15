@@ -250,6 +250,14 @@ export default {
     },
   },
   async mounted() {
+    console.log(this.$route.query.id);
+    if (this.$route.query.id) {
+      await this.$store.dispatch(
+        "School/getSchoolInformationById",
+        this.$route.query.id
+      );
+    }
+
     await this.fetchTeachersList(ADMIN);
   },
   computed: {
