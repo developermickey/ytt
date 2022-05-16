@@ -12,12 +12,6 @@
                 <div class="u-text-h2 u-mb-10 u-mt-10 head-title">
                   Add School
                 </div>
-                <!-- <UBtn
-              class="head-btn"
-              :to="{ name: 'admin-teacher-invite' }"
-              color="blue"
-              >Add via Principal Email invite</UBtn
-            > -->
               </div>
             </div>
             <div class="u-row create-wrap">
@@ -145,7 +139,6 @@
                 </ValidationProvider>
               </div>
               <div class="u-col-6 u-mb-8 create-item">
-                {{ school.assigned_teacher }}
                 <label for="teacher">Select Teacher</label>
                 <multiselect
                   v-model="assigned_teacher"
@@ -237,25 +230,41 @@ export default {
       this.school.assigned_teachers_id = this.assigned_teacher.map((x) => {
         return x.id;
       });
-      console.log(this.school);
+       this.school.assigned_teachers_id =  this.school.assigned_teachers_id.length > 0 ? this.school.assigned_teachers_id : null
       const formData = new FormData();
       for (let field in this.school) {
-        console.log(typeof this.school[field], field);
         formData.append(field, this.school[field]);
       }
+      let self = this
 
-      axios.post("/admin/school", formData).then((e) => {
-        console.log(e);
+      await axios.post("/admin/school", formData).then(() => {
+        this.$notify({
+          title: "School created Successfully",
+          type: "success",
+        });
+        setTimeout(() => {
+          self.$route.push("/admin/users/all")
+        }, "2000");
+      }).catch((err)=>{
+        this.$notify({
+          title: "Principle Email should be unique",
+          text:"Please try again",
+          type: "error",
+        });
       });
     },
   },
   async mounted() {
-    console.log(this.$route.query.id);
     if (this.$route.query.id) {
       await this.$store.dispatch(
         "School/getSchoolInformationById",
         this.$route.query.id
       );
+      this.school = { ...this.schoolDetails };
+      this.school.principle_name = this.schoolDetails.principal_name;
+      this.school.password = "";
+      this.assigned_teacher = this.schoolDetails.assigned_teacher;
+      // self.name =
     }
 
     await this.fetchTeachersList(ADMIN);
@@ -264,6 +273,9 @@ export default {
     ...mapGetters("Teachers", {
       teacherList: "filteredTeachersList",
       loading: "loading",
+    }),
+    ...mapGetters("School", {
+      schoolDetails: "schoolDetails",
     }),
   },
 };
