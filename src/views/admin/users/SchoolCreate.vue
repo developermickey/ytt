@@ -108,7 +108,7 @@
               </div>
               <div class="u-col-6 u-mb-8 create-item">
                 <ValidationProvider
-                  rules="min:6|max:20|required"
+                  :rules="$route.query.id ? '' : 'min:6|max:20|required'"
                   name="Password"
                   v-slot="{ errors }"
                 >
@@ -124,7 +124,11 @@
               </div>
               <div class="u-col-6 u-mb-8 create-item">
                 <ValidationProvider
-                  rules="min:6|max:20|required|confirmed:Password"
+                  :rules="
+                    $route.query.id
+                      ? ''
+                      : 'min:6|max:20|required|confirmed:Password'
+                  "
                   name="Repeat password"
                   v-slot="{ errors }"
                 >
@@ -230,28 +234,42 @@ export default {
       this.school.assigned_teachers_id = this.assigned_teacher.map((x) => {
         return x.id;
       });
-       this.school.assigned_teachers_id =  this.school.assigned_teachers_id.length > 0 ? this.school.assigned_teachers_id : null
+      this.school.assigned_teachers_id =
+        this.school.assigned_teachers_id.length > 0
+          ? this.school.assigned_teachers_id
+          : null;
+      this.password = this.password === "" ? null : this.password;
       const formData = new FormData();
       for (let field in this.school) {
         formData.append(field, this.school[field]);
       }
-      let self = this
+      let self = this;
 
-      await axios.post("/admin/school", formData).then(() => {
-        this.$notify({
-          title: "School created Successfully",
-          type: "success",
+      const createUrl = "/admin/school";
+      const updateUrl = `/admin/school/${this.$route.query.id}`;
+
+      await axios
+        .post(this.$route.query.id ? updateUrl : createUrl, formData)
+        .then(() => {
+          this.$notify({
+            title: `${
+              self.$router.query.id
+                ? "School updated Successfully"
+                : "School created Successfully"
+            }`,
+            type: "success",
+          });
+          setTimeout(() => {
+            self.$router.push("/admin/users/all");
+          }, "1000");
+        })
+        .catch(() => {
+          this.$notify({
+            title: "Principle Email should be unique",
+            text: "Please try again",
+            type: "error",
+          });
         });
-        setTimeout(() => {
-          self.$route.push("/admin/users/all")
-        }, "2000");
-      }).catch((err)=>{
-        this.$notify({
-          title: "Principle Email should be unique",
-          text:"Please try again",
-          type: "error",
-        });
-      });
     },
   },
   async mounted() {
@@ -260,10 +278,14 @@ export default {
         "School/getSchoolInformationById",
         this.$route.query.id
       );
-      this.school = { ...this.schoolDetails };
+      this.school.name = this.schoolDetails.name;
       this.school.principle_name = this.schoolDetails.principal_name;
-      this.school.password = "";
+      this.school.phone = this.schoolDetails.phone;
+      this.school.principal_phone = this.schoolDetails.principal_phone;
+      this.school.email = this.schoolDetails.email;
+      this.school.city = this.schoolDetails.city;
       this.assigned_teacher = this.schoolDetails.assigned_teacher;
+      // this.school.avatar = this.schoolDetails.avatar;
       // self.name =
     }
 
