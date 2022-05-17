@@ -1,32 +1,33 @@
-import UTextField from '@/components/common/UTextField';
-import FileUpload from '@/components/common/FileUpload/FileUpload';
+import UTextField from "@/components/common/UTextField";
+import FileUpload from "@/components/common/FileUpload/FileUpload";
 
-import {mapActions, mapGetters} from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data: () => ({
-    name: '',
-    phone: '',
-    email: '',
-    username: '',
-    city: '',
-    password: '',
-    repeatPassword: '',
+    name: "",
+    phone: "",
+    email: "",
+    username: "",
+    city: "",
+    password: "",
+    repeatPassword: "",
     avatar: null,
     role: 1,
+    school_id: null,
   }),
   components: {
     UTextField,
     FileUpload,
   },
   computed: {
-    ...mapGetters('Users', ['loading'])
+    ...mapGetters("Users", ["loading"]),
   },
   methods: {
-    ...mapActions('Users', {
-      create : 'create'
+    ...mapActions("Users", {
+      create: "create",
     }),
-    collectPostData(){
+    collectPostData() {
       let formData = {
         name: this.name,
         phone: this.phone,
@@ -35,33 +36,33 @@ export default {
         city: this.city,
         password: this.password,
         password_confirmation: this.repeatPassword,
-        role: this.role
+        role: this.role,
+        school_id: this.school_id === null ? null : this.school_id.id,
       };
 
-      if(this.avatar){
+      if (this.avatar) {
         formData.avatar = this.avatar;
       }
 
       return formData;
     },
-    submit(){
+    submit() {
       let data = this.collectPostData();
       this.create(data)
-          .then(() => {
-            this.$router.push({ name: 'admin-users-all' });
-            this.$notify({
-              title: 'User successfully created!',
-              type: 'success'
-            });
-          })
-          .catch(({ message }) => {
-            this.$notify({
-              title: 'User creation error',
-              text: message,
-              type: 'error'
-            });
+        .then(() => {
+          this.$router.push({ name: "admin-users-all" });
+          this.$notify({
+            title: "User successfully created!",
+            type: "success",
           });
+        })
+        .catch(({ message }) => {
+          this.$notify({
+            title: "User creation error",
+            text: message,
+            type: "error",
+          });
+        });
     },
-    
-  }
-}
+  },
+};

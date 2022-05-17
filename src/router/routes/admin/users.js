@@ -2,6 +2,7 @@ import Users from "@/views/admin/users/Users";
 import StudentSingleCreate from "@/views/admin/users/StudentSingleCreate";
 import StudentInvite from "@/views/admin/users/StudentInvite";
 import TeacherInvite from "@/views/admin/users/TeacherInvite";
+import PrincipalInvite from "@/views/admin/users/PrincipalInvite.vue";
 import TeacherSingleCreate from "@/views/admin/users/TeacherSingleCreate";
 import SchoolCreate from "@/views/admin/users/SchoolCreate";
 import EditSingle from "@/views/admin/users/EditSingle";
@@ -41,6 +42,11 @@ export default {
       path: "teacher-invite",
       component: TeacherInvite,
       name: "admin-teacher-invite",
+    },
+    {
+      path: "principal-invite",
+      component: PrincipalInvite,
+      name: "admin-principal-invite",
     },
     {
       path: "edit/:id",

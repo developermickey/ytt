@@ -7,10 +7,21 @@
       <ValidationObserver v-slot="{ handleSubmit }">
         <div class="u-flex is-flex-column u-flex-grow u-pb-25 screen-container">
           <div class="u-container u-mr-auto u-ml-auto">
-            <div class="u-row">
+            <div class="flex flex-wrap">
               <div class="head">
                 <div class="u-text-h2 u-mb-10 u-mt-10 head-title">
                   Add School
+                </div>
+              </div>
+              <div v-if="!$route.query.id">
+                <div class="text-right">
+                  <h2 class="mr-5 mb-2">Add Principal</h2>
+                  <UBtn
+                    class="head-btn"
+                    :to="{ name: 'admin-principal-invite' }"
+                    color="blue"
+                    >Add via e-mail invite</UBtn
+                  >
                 </div>
               </div>
             </div>

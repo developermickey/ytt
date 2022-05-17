@@ -5,97 +5,119 @@
         <div class="u-row">
           <div class="head">
             <div class="u-text-h2 u-mb-10 u-mt-10 head-title">Add teacher</div>
-            <UBtn class="head-btn" :to="{ name: 'admin-teacher-invite' }" color="blue">Add via e-mail invite</UBtn>
+            <UBtn
+              class="head-btn"
+              :to="{ name: 'admin-teacher-invite' }"
+              color="blue"
+              >Add via e-mail invite</UBtn
+            >
           </div>
         </div>
         <div class="u-row create-wrap">
           <div class="u-col-6 u-mb-8 create-item">
-            <ValidationProvider rules="required" name="Full name" v-slot="{ errors }">
+            <ValidationProvider
+              rules="required"
+              name="Full name"
+              v-slot="{ errors }"
+            >
               <u-text-field
-                  label="Full name"
-                  placeholder="Full name"
-                  v-model="name"
-                  :error="errors[0]"
+                label="Full name"
+                placeholder="Full name"
+                v-model="name"
+                :error="errors[0]"
               >
               </u-text-field>
             </ValidationProvider>
           </div>
           <div class="u-col-6 u-mb-8 create-item">
-            <u-text-field
-                label="Phone"
-                placeholder="Phone"
-                v-model="phone"
-            >
+            <u-text-field label="Phone" placeholder="Phone" v-model="phone">
             </u-text-field>
           </div>
           <div class="u-col-6 u-mb-8 create-item">
-            <ValidationProvider rules="required|email" name="E-mail" v-slot="{ errors }">
-              <u-text-field
-                  label="E-mail"
-                  placeholder="E-mail"
-                  v-model="email"
-                  :error="errors[0]"
-              >
-              </u-text-field>
-            </ValidationProvider>
-          </div>
-          <div class="u-col-6 u-mb-8 create-item">
-            <ValidationProvider rules="required" name="Username" v-slot="{ errors }">
-              <u-text-field
-                  label="Username"
-                  placeholder="Username"
-                  v-model="username"
-                  :error="errors[0]"
-              >
-              </u-text-field>
-            </ValidationProvider>
-          </div>
-          <div class="u-col-6 u-mb-8 create-item">
-            <u-text-field
-                label="City"
-                placeholder="City"
-                v-model="city"
+            <ValidationProvider
+              rules="required|email"
+              name="E-mail"
+              v-slot="{ errors }"
             >
+              <u-text-field
+                label="E-mail"
+                placeholder="E-mail"
+                v-model="email"
+                :error="errors[0]"
+              >
+              </u-text-field>
+            </ValidationProvider>
+          </div>
+          <div class="u-col-6 u-mb-8 create-item">
+            <ValidationProvider
+              rules="required"
+              name="Username"
+              v-slot="{ errors }"
+            >
+              <u-text-field
+                label="Username"
+                placeholder="Username"
+                v-model="username"
+                :error="errors[0]"
+              >
+              </u-text-field>
+            </ValidationProvider>
+          </div>
+          <div class="u-col-6 u-mb-8 create-item">
+            <u-text-field label="City" placeholder="City" v-model="city">
             </u-text-field>
           </div>
-          <div class="u-col-6 u-mb-8 create-item"></div>
           <div class="u-col-6 u-mb-8 create-item">
-            <ValidationProvider rules="min:6|max:20|required" name="Password" v-slot="{ errors }">
+            <label for="teacher">Select School</label>
+            <multiselect
+              v-model="school_id"
+              :options="schoolList === null ? [] : schoolList"
+              :close-on-select="true"
+              label="name"
+              :track-by="'id'"
+              placeholder="Select School"
+              :multiple="false"
+              :value="'id'"
+              :option-height="500"
+            ></multiselect>
+          </div>
+          <div class="u-col-6 u-mb-8 create-item">
+            <ValidationProvider
+              rules="min:6|max:20|required"
+              name="Password"
+              v-slot="{ errors }"
+            >
               <u-text-field
-                  label="Password"
-                  placeholder="Password"
-                  type="password"
-                  v-model="password"
-                  :error="errors[0]"
+                label="Password"
+                placeholder="Password"
+                type="password"
+                v-model="password"
+                :error="errors[0]"
               >
               </u-text-field>
             </ValidationProvider>
           </div>
           <div class="u-col-6 u-mb-8 create-item">
-            <ValidationProvider rules="min:6|max:20|required" name="Repeat password" v-slot="{ errors }">
+            <ValidationProvider
+              rules="min:6|max:20|required"
+              name="Repeat password"
+              v-slot="{ errors }"
+            >
               <u-text-field
-                  label="Repeat password"
-                  placeholder="Repeat password"
-                  type="password"
-                  v-model="repeatPassword"
-                  :error="errors[0]"
+                label="Repeat password"
+                placeholder="Repeat password"
+                type="password"
+                v-model="repeatPassword"
+                :error="errors[0]"
               >
               </u-text-field>
             </ValidationProvider>
           </div>
           <div class="u-col-6 avatar-block">
             <label>Avatar</label>
-            <file-upload
-                v-model="avatar"
-                accept="image/*"
-            >
+            <file-upload v-model="avatar" accept="image/*">
               <template v-slot:default-label>
-                <UBtn
-                    size="large"
-                    color="primary"
-                    tag="div"
-                    class="add-photo"
-                >
+                <UBtn size="large" color="primary" tag="div" class="add-photo">
                   Add photo
                 </UBtn>
               </template>
@@ -105,32 +127,42 @@
       </div>
       <div class="u-flex is-justify-center">
         <UBtn
-            class="save-button"
-            size="x-large"
-            color="primary"
-            @click="handleSubmit(submit)"
-            id="create_teacher_submit"
-            width="320"
-            :loading="loading"
+          class="save-button"
+          size="x-large"
+          color="primary"
+          @click="handleSubmit(submit)"
+          id="create_teacher_submit"
+          width="320"
+          :loading="loading"
         >
           Save
         </UBtn>
       </div>
-
     </div>
   </ValidationObserver>
 </template>
 
 <script>
-import CreateUserMixin from '@/mixins/create-user.mixin';
-import {TEACHER} from "@/constants/roles";
+import CreateUserMixin from "@/mixins/create-user.mixin";
+import { TEACHER } from "@/constants/roles";
+import Multiselect from "vue-multiselect";
 
 export default {
   mixins: [CreateUserMixin],
   data: () => ({
     role: TEACHER,
   }),
-}
+  components: { Multiselect },
+  async mounted() {
+    let self = this;
+    await self.$store.dispatch("School/fetchSchoolList");
+  },
+  computed: {
+    schoolList() {
+      return this.$store.getters["School/schoolList"];
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
