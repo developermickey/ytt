@@ -252,7 +252,9 @@ export default {
       this.password = this.password === "" ? null : this.password;
       const formData = new FormData();
       for (let field in this.school) {
-        formData.append(field, this.school[field]);
+        if (this.school[field]) {
+          formData.append(field, this.school[field]);
+        }
       }
       let self = this;
 
