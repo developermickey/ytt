@@ -25,18 +25,51 @@
                 <p class="mx-4">{{ i.name }}</p>
               </div>
             </td>
-            <td class="">
-              <div class=" d-flex justify-content-center">
-                <UIconBtn
-                  class="u-mx-1 qa-delete-teacher-btn"
-                  icon="icon-pencil"
-                  icon-color="grey"
-                  icon-hover-color="blue"
-                  bg-hover-color="white"
-                  hoverable
-                  @click.native="viewSchool(item)"
-                >
-                </UIconBtn>
+            <td class="pr-5 u-text-right">
+              <div class="actions-col actions-cell">
+                <b-dropdown no-caret>
+                  <template #button-content>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="feather feather-more-vertical"
+                    >
+                      <circle cx="12" cy="12" r="1"></circle>
+                      <circle cx="12" cy="5" r="1"></circle>
+                      <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                  </template>
+                  <b-dropdown-item>
+                    <UIconBtn
+                      class="u-mx-1 qa-login-as-teacher-btn login-as-icon-btn"
+                      icon="icon-enter"
+                      icon-hover-color="blue"
+                      @click.native="onLoginAsUserClick(item)"
+                      title="Login as user"
+                    >
+                    </UIconBtn>
+                  </b-dropdown-item>
+                  <b-dropdown-item>
+                    <UIconBtn
+                      class="u-mx-1 qa-delete-teacher-btn"
+                      icon="icon-pencil"
+                      icon-color="grey"
+                      icon-hover-color="blue"
+                      bg-hover-color="white"
+                      hoverable
+                      @click.native="viewSchool(item)"
+                      title="Edit School"
+                    >
+                    </UIconBtn>
+                  </b-dropdown-item>
+                </b-dropdown>
               </div>
             </td>
           </tr>
@@ -57,6 +90,8 @@
 import UCard from "@/components/common/UCard";
 import UIconBtn from "@/components/common/UIconBtn";
 import Loader from "@/components/Loader";
+import { BDropdown, BDropdownItem } from "bootstrap-vue";
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -64,6 +99,8 @@ export default {
     // SelectLesson,
     UIconBtn,
     Loader,
+    BDropdown,
+    BDropdownItem,
   },
   data: () => ({
     orderList: [],
@@ -84,19 +121,38 @@ export default {
         text: "Assignrd Teacher",
       },
       {
-        text: "View",
+        text: "Action",
         value: "actions",
       },
     ],
   }),
 
   methods: {
+    ...mapActions("Auth", ["loginAsUser"]),
     viewSchool(item) {
       this.$router.push({
         name: "admin-school-create",
         query: { id: item.id },
       });
       // this.$router.push({ to: `/create-school`, query: item.id });
+    },
+    async onLoginAsUserClick(user) {
+      let self = this;
+      await self
+        .loginAsUser(user.id)
+        .then(() => {
+          self.$notify({
+            title: "Welcome!",
+            type: "success",
+          });
+        })
+        .catch(({ message }) => {
+          self.$notify({
+            title: "Login error",
+            text: message,
+            type: "error",
+          });
+        });
     },
   },
   async mounted() {
@@ -116,6 +172,21 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/vars";
+@import "@/styles/mixins";
+.actions-col {
+  display: flex;
+  justify-content: flex-end;
+}
+.actions-cell {
+  padding-right: 20px;
+  .dropdown-menu {
+    min-width: 2rem;
+  }
+  .dropdown-toggle {
+    background: linear-gradient(227.7deg, #ecbf8c 32.81%, #dfc188 69.13%);
+    border: none;
+  }
+}
 
 .avatar-wrap {
   border-radius: 50%;

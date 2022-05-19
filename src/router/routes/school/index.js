@@ -1,8 +1,8 @@
 import School from "@/views/school/School";
 
-// import lessons from "./lessons";
+import user from "./user";
 // import students from "./students";
-// import settings from "./settings";
+import settings from "./settings";
 
 import { SCHOOL } from "@/constants/roles";
 import routesExtendMeta from "@/router/routesExtendMeta";
@@ -15,7 +15,7 @@ const routes = {
     auth: true,
     roleAccess: SCHOOL,
   },
-  //   children: [lessons, students, settings],
+  children: [user, settings],
 };
 
 export default routesExtendMeta(routes);

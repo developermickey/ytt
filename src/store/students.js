@@ -111,9 +111,11 @@ export default {
             ...inactiveStudentList,
           ];
           context.commit("SET_STUDENTS_LIST", mergeStudents);
+          context.commit("SET_LOADING", false);
         })
         .catch((err) => {
           ErrorHelper.getErrorWithMessage(err);
+          context.commit("SET_LOADING", false);
         });
     },
 

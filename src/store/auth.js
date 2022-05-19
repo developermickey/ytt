@@ -2,7 +2,7 @@ import router from "@/router";
 import cookie from "js-cookie";
 import axios from "axios";
 import moment from "moment";
-import { ADMIN, TEACHER, STUDENT, ROLE_MAP } from "@/constants/roles";
+import { ADMIN, TEACHER, STUDENT, ROLE_MAP, SCHOOL } from "@/constants/roles";
 import ErrorHelper from "@/helpers/ErrorHelper";
 
 export default {
@@ -184,6 +184,8 @@ export default {
           return router.push({ name: "teacher-lessons-all" });
         case STUDENT:
           return router.push({ name: "student-lessons-all" });
+        case SCHOOL:
+          return router.push({ name: "school-users-all" });
       }
     },
   },

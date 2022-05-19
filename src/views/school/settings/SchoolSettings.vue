@@ -10,18 +10,7 @@
             <div class="flex flex-wrap">
               <div class="head">
                 <div class="u-text-h2 u-mb-10 u-mt-10 head-title">
-                  {{ $route.query.id ? "Update school" : "Add School" }}
-                </div>
-              </div>
-              <div v-if="!$route.query.id">
-                <div class="text-right">
-                  <h2 class="mr-5 mb-2">Add Principal</h2>
-                  <UBtn
-                    class="head-btn"
-                    :to="{ name: 'admin-principal-invite' }"
-                    color="blue"
-                    >Add via e-mail invite</UBtn
-                  >
+                  Settings
                 </div>
               </div>
             </div>
@@ -153,20 +142,6 @@
                   </u-text-field>
                 </ValidationProvider>
               </div>
-              <div class="u-col-6 u-mb-8 create-item">
-                <label for="teacher">Select Teacher</label>
-                <multiselect
-                  v-model="assigned_teacher"
-                  :options="teacherList === null ? [] : teacherList"
-                  :close-on-select="false"
-                  label="name"
-                  :track-by="'id'"
-                  placeholder="Select Teacher"
-                  :multiple="true"
-                  :value="'id'"
-                  :option-height="500"
-                ></multiselect>
-              </div>
               <div class="u-col-6 avatar-block">
                 <label>Avatar</label>
                 <file-upload v-model="school.avatar" accept="image/*">
@@ -208,9 +183,9 @@ import UTextField from "@/components/common/UTextField";
 import FileUpload from "@/components/common/FileUpload/FileUpload";
 import { extend } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
-import { ADMIN } from "@/constants/roles";
-import { mapActions, mapGetters } from "vuex";
-import Multiselect from "vue-multiselect";
+
+import { mapGetters } from "vuex";
+// import Multiselect from "vue-multiselect";
 import Loader from "@/components/Loader";
 import axios from "axios";
 extend("required", {
@@ -221,7 +196,7 @@ export default {
   components: {
     UTextField,
     FileUpload,
-    Multiselect,
+    // Multiselect,
     Loader,
   },
   data: () => ({
@@ -234,22 +209,13 @@ export default {
       city: "",
       password: "",
       password_confirmation: "",
-      assigned_teachers_id: [],
       avatar: null,
     },
     assigned_teacher: [],
     isSchoolCreatePending: false,
   }),
   methods: {
-    ...mapActions("Teachers", ["fetchTeachersList"]),
     async submit() {
-      this.school.assigned_teachers_id = this.assigned_teacher.map((x) => {
-        return x.id;
-      });
-      this.school.assigned_teachers_id =
-        this.school.assigned_teachers_id.length > 0
-          ? this.school.assigned_teachers_id
-          : null;
       this.password = this.password === "" ? null : this.password;
       const formData = new FormData();
       for (let field in this.school) {
@@ -306,14 +272,8 @@ export default {
       // this.school.avatar = this.schoolDetails.avatar;
       // self.name =
     }
-
-    await this.fetchTeachersList(ADMIN);
   },
   computed: {
-    ...mapGetters("Teachers", {
-      teacherList: "filteredTeachersList",
-      loading: "loading",
-    }),
     ...mapGetters("School", {
       schoolDetails: "schoolDetails",
     }),

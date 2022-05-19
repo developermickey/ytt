@@ -75,7 +75,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { ADMIN, TEACHER, STUDENT } from "@/constants/roles";
+import { ADMIN, TEACHER, STUDENT, SCHOOL } from "@/constants/roles";
 
 export default {
   data: () => ({
@@ -162,6 +162,51 @@ export default {
         //   to: {name: 'student-settings'},
         //   icon: 'icon-settings',
         //   active: false,
+        // },
+      ],
+      [SCHOOL]: [
+        {
+          id: 1,
+          text: "Users",
+          to: { name: "school-users-all" },
+          icon: "icon-user-group",
+          active: true,
+        },
+        {
+          id: 2,
+          text: "Settings",
+          to: { name: "school-settings" },
+          icon: "icon-settings",
+          active: false,
+        },
+        // {
+        //   id: 2,
+        //   text: "Users",
+        //   to: { name: "admin-users-all" },
+        //   icon: "icon-user-group",
+        //   active: false,
+        // },
+        // {
+        //   id: 3,
+        //   text: "Settings",
+        //   to: { name: "admin-settings" },
+        //   icon: "icon-settings",
+        //   active: false,
+        // },
+        // {
+        //   id: 4,
+        //   text: "Store",
+        //   to: { name: "product-list" },
+        //   icon: "icon-store",
+        //   active: false,
+        // },
+        // {
+        //   id: 5,
+        //   text: "Orders",
+        //   to: { name: "order-list" },
+        //   icon: "list-active",
+        //   active: false,
+        //   pngIcon: true,
         // },
       ],
     },
