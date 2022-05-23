@@ -4,6 +4,31 @@
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
     <div v-else>
+      <div class="u-container u-ml-auto u-mr-auto u-pb-10">
+        <div class="u-row">
+          <div class="u-col-12">
+            <u-card
+              class="settings-container u-px-20 u-py-16 u-my-10"
+              elevation="1"
+            >
+              <div class="u-flex head-wrap">
+                <div class="u-text-h2 mr-5 head-text">Add users</div>
+                <div class="settings-buttons__wrap">
+                  <UBtn
+                    class="u-mx-2"
+                    :to="{ name: 'school-student-create' }"
+                    color="primary"
+                    size="x-large"
+                    id="admin_create_student_link"
+                  >
+                    Add student
+                  </UBtn>
+                </div>
+              </div>
+            </u-card>
+          </div>
+        </div>
+      </div>
       <ValidationObserver v-slot="{ handleSubmit }">
         <div class="u-flex is-flex-column u-flex-grow u-pb-25 screen-container">
           <div class="u-container u-mr-auto u-ml-auto">
@@ -183,7 +208,7 @@ import UTextField from "@/components/common/UTextField";
 import FileUpload from "@/components/common/FileUpload/FileUpload";
 import { extend } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
-
+import UCard from "@/components/common/UCard";
 import { mapGetters } from "vuex";
 // import Multiselect from "vue-multiselect";
 import Loader from "@/components/Loader";
@@ -198,6 +223,7 @@ export default {
     FileUpload,
     // Multiselect,
     Loader,
+    UCard,
   },
   data: () => ({
     school: {

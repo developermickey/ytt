@@ -4,6 +4,7 @@ import {
   // STUDENT,
   TEACHER,
   ADMIN,
+  SCHOOL,
   ROLE_MAP,
 } from "@/constants/roles";
 
@@ -48,6 +49,8 @@ export default {
       if (role === ADMIN) {
         url = `/${ROLE_MAP[ADMIN]}/users`;
         params.role = TEACHER;
+      } else if (role === SCHOOL) {
+        url = `/school/teachers?role=2`;
       }
 
       return new Promise((resolve, reject) => {

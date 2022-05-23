@@ -260,7 +260,7 @@ import CommentModal from "@/components/modals/CommentModal.vue";
 import { StudentsApi } from "@/api";
 
 import { mapActions, mapMutations, mapGetters } from "vuex";
-import { ADMIN } from "@/constants/roles";
+import { SCHOOL } from "@/constants/roles";
 import DeleteUserMixin from "@/mixins/delete-user.mixin";
 
 export default {
@@ -380,7 +380,7 @@ export default {
           await StudentsApi.comment(this.student.payloadData);
         }
       }
-      await this.fetchStudentsList(ADMIN);
+      await this.fetchStudentsList(SCHOOL);
       this.loading = false;
     },
     formatDate(e) {
@@ -449,7 +449,7 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchStudentsList(ADMIN);
+    await this.fetchStudentsList(SCHOOL);
   },
   beforeDestroy() {
     this.RESET_STUDENTS_LIST();

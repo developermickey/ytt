@@ -1,6 +1,6 @@
 import axios from "axios";
 import ErrorHelper from "@/helpers/ErrorHelper";
-import { STUDENT, TEACHER, ADMIN, ROLE_MAP } from "@/constants/roles";
+import { STUDENT, TEACHER, ADMIN, SCHOOL, ROLE_MAP } from "@/constants/roles";
 import moment from "moment";
 export default {
   namespaced: true,
@@ -55,6 +55,8 @@ export default {
         params.role = STUDENT;
       } else if (role === TEACHER) {
         url = `/${ROLE_MAP[TEACHER]}/students`;
+      } else if (role === SCHOOL) {
+        url = `/school/students?role=3`;
       }
       await axios
         // .get("/admin/getStudentTest")

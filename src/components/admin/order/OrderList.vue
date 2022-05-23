@@ -4,8 +4,19 @@
     <div v-if="loading">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
-    <u-card elevation="3">
-      <table v-if="!loading" class="u-data-table ">
+    <u-card v-if="!loading" elevation="3">
+      <div class="text-right mt-5 mr-5 mb-5">
+        <div class="text">Change Order Status</div>
+        <select
+          @change="getOrdersList(orderStatus)"
+          class=" mt-3 p-3 statusSelect"
+          v-model="orderStatus"
+        >
+          <option class="text" value="processing">Processing</option>
+          <option class="text" value="fullfilled">Fulfilled</option>
+        </select>
+      </div>
+      <table class="u-data-table ">
         <thead>
           <tr>
             <template v-for="(column, index) in columns">
@@ -69,6 +80,7 @@ export default {
   data: () => ({
     loading: true,
     orderList: [],
+    orderStatus: "processing",
     columns: [
       {
         text: "Order Date",
@@ -96,30 +108,35 @@ export default {
     viewOrder(item) {
       this.$router.push(`/admin/order/details/${item.order_id}`);
     },
-  },
-  async mounted() {
-    let self = this;
-    await OrderApi.getOrderList().then((e) => {
-      self.orderList = [];
-      let reverse = e.data.reverse();
-      reverse.forEach((element) => {
-        self.orderList.push({
-          order_date: moment(element.created_at, "YYYY-MM-DD").format(
-            "MM-DD-YYYY"
-          ),
-          users: element.users,
-          products: element.products,
-          status:
-            element.status === null
-              ? "Processing"
-              : element.status === "processing"
-              ? "Processing"
-              : "Fulfilled",
-          product_amount: element.product_amount,
-          order_id: element.order_id,
+    async getOrdersList(status) {
+      let self = this;
+      self.loading = true;
+      await OrderApi.getOrderList(status).then((e) => {
+        self.orderList = [];
+        let reverse = e.data.reverse();
+        reverse.forEach((element) => {
+          self.orderList.push({
+            order_date: moment(element.created_at, "YYYY-MM-DD").format(
+              "MM-DD-YYYY"
+            ),
+            users: element.users,
+            products: element.products,
+            status:
+              element.status === null
+                ? "Processing"
+                : element.status === "processing"
+                ? "Processing"
+                : "Fulfilled",
+            product_amount: element.product_amount,
+            order_id: element.order_id,
+          });
         });
       });
-    });
+      self.loading = false;
+    },
+  },
+  async mounted() {
+    await this.getOrdersList(this.orderStatus);
     this.loading = false;
   },
 };
@@ -127,6 +144,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/vars";
+.statusSelect {
+  border: 1px solid #ecbf8c;
+  width: 230px;
+}
+.statusSelect:focus-visible {
+  outline: none !important;
+  border: 1px solid #ecbf8c !important;
+}
 
 .avatar-wrap {
   border-radius: 50%;
@@ -177,5 +202,8 @@ tbody tr:hover {
 }
 .loader {
   position: inherit !important;
+}
+.text {
+  font-size: 22px;
 }
 </style>

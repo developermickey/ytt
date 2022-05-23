@@ -80,7 +80,10 @@
                   <b-dropdown-item>
                     <UIconBtn
                       class="u-mx-1 qa-edit-teacher-btn"
-                      :to="{ name: 'admin-user-edit', params: { id: item.id } }"
+                      :to="{
+                        name: 'SCHOOL-user-edit',
+                        params: { id: item.id },
+                      }"
                       icon="icon-pencil"
                       icon-color="grey"
                       icon-hover-color="blue"
@@ -134,7 +137,7 @@ import Loader from "@/components/Loader";
 
 import { UsersApi } from "@/api";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { ADMIN } from "@/constants/roles";
+import { SCHOOL } from "@/constants/roles";
 
 import DeleteUserMixin from "@/mixins/delete-user.mixin";
 
@@ -215,7 +218,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchTeachersList(ADMIN);
+    this.fetchTeachersList(SCHOOL);
   },
   beforeDestroy() {
     this.RESET_TEACHERS_LIST();

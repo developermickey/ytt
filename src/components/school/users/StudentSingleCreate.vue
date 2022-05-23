@@ -4,16 +4,16 @@
       <div class="u-container u-mr-auto u-ml-auto">
         <div class="u-row">
           <div class="head">
-            <div class="u-text-h2 u-mb-10 u-mt-10 head-title">Add student</div>
+            <!-- <div class="u-text-h2 u-mb-10 u-mt-10 head-title">Add student</div>
             <UBtn
               class="head-btn"
-              :to="{ name: 'admin-student-invite' }"
+              :to="{ name: 'school-student-invite' }"
               color="blue"
               >Add via e-mail invite</UBtn
-            >
+            > -->
           </div>
         </div>
-        <div class="u-row create-wrap">
+        <div class="u-row create-wrap u-mb-10 u-mt-10">
           <div class="u-col-6 u-mb-8 create-item">
             <ValidationProvider
               rules="required"
@@ -71,7 +71,7 @@
             ></u-text-field>
           </div>
           <div class="u-col-6 u-mb-8 create-item">
-            <label for="teacher">Select School</label>
+            <!-- <label for="teacher">Select School</label>
             <multiselect
               v-model="school_id"
               :options="schoolList === null ? [] : schoolList"
@@ -82,7 +82,8 @@
               :multiple="false"
               :value="'id'"
               :option-height="500"
-            ></multiselect>
+              :disabled="true"
+            ></multiselect> -->
           </div>
           <div class="u-col-6 u-mb-8 create-item">
             <ValidationProvider
@@ -148,7 +149,7 @@
 <script>
 import CreateUserMixin from "@/mixins/create-user.mixin";
 import { STUDENT } from "@/constants/roles";
-import Multiselect from "vue-multiselect";
+// import Multiselect from "vue-multiselect";
 
 export default {
   mixins: [CreateUserMixin],
@@ -156,7 +157,7 @@ export default {
     role: STUDENT,
   }),
   components: {
-    Multiselect,
+    // Multiselect,
   },
   async mounted() {
     await this.$store.dispatch("School/fetchSchoolList");

@@ -1,4 +1,5 @@
 import School from "@/views/school/School";
+import StudentSingleCreate from "@/components/school/users/StudentSingleCreate";
 
 import user from "./user";
 // import students from "./students";
@@ -15,7 +16,15 @@ const routes = {
     auth: true,
     roleAccess: SCHOOL,
   },
-  children: [user, settings],
+  children: [
+    user,
+    settings,
+    {
+      path: "create-student",
+      component: StudentSingleCreate,
+      name: "school-student-create",
+    },
+  ],
 };
 
 export default routesExtendMeta(routes);

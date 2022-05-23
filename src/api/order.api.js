@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export default {
-  getOrderList() {
-    return axios.get(`admin/orders`);
+  getOrderList(status) {
+    return axios.get(`admin/orders?status=${status}`);
   },
   getOrderDetails(payload) {
     let formData = new FormData();
