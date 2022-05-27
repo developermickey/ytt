@@ -239,6 +239,7 @@ export default {
     },
     assigned_teacher: [],
     isSchoolCreatePending: false,
+    loading: false,
   }),
   methods: {
     async submit() {

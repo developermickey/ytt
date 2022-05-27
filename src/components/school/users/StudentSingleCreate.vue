@@ -147,26 +147,26 @@
 </template>
 
 <script>
-import CreateUserMixin from "@/mixins/create-user.mixin";
-import { STUDENT } from "@/constants/roles";
+import CreateUserSchoolMixin from "@/mixins/create-user-school.mixin";
+import { SCHOOL } from "@/constants/roles";
 // import Multiselect from "vue-multiselect";
 
 export default {
-  mixins: [CreateUserMixin],
+  mixins: [CreateUserSchoolMixin],
   data: () => ({
-    role: STUDENT,
+    role: SCHOOL,
   }),
   components: {
     // Multiselect,
   },
-  async mounted() {
-    await this.$store.dispatch("School/fetchSchoolList");
-  },
-  computed: {
-    schoolList() {
-      return this.$store.getters["School/schoolList"];
-    },
-  },
+  // async mounted() {
+  //   await this.$store.dispatch("School/fetchSchoolList");
+  // },
+  // computed: {
+  //   schoolList() {
+  //     return this.$store.getters["School/schoolList"];
+  //   },
+  // },
 };
 </script>
 

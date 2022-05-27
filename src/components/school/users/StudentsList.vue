@@ -3,7 +3,7 @@
     <div v-if="loading">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
-    <u-card v-else>
+    <u-card v-else style="min-height:500px">
       <table key="tableKey" class="u-data-table ">
         <colgroup>
           <col v-for="column in columns" :key="column.value" />
@@ -219,6 +219,7 @@
     <select-teacher
       v-model="currentSelectedTeacher"
       @save="assignTeacher"
+      type="school"
     ></select-teacher>
     <GiveCoins></GiveCoins>
     <basic-modal

@@ -1,21 +1,22 @@
 <template>
   <div class="u-container u-ml-auto u-mr-auto u-pt-15">
     <div class="u-text-h1 u-mr-6 mb-5">Orders</div>
+
+    <div class="text-right mt-5 mr-5 mb-5">
+      <div class="text">Change Order Status</div>
+      <select
+        @change="getOrdersList(orderStatus)"
+        class=" mt-3 p-3 statusSelect"
+        v-model="orderStatus"
+      >
+        <option class="text" value="processing">Processing</option>
+        <option class="text" value="fullfilled">Fulfilled</option>
+      </select>
+    </div>
     <div v-if="loading">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
     <u-card v-if="!loading" elevation="3">
-      <div class="text-right mt-5 mr-5 mb-5">
-        <div class="text">Change Order Status</div>
-        <select
-          @change="getOrdersList(orderStatus)"
-          class=" mt-3 p-3 statusSelect"
-          v-model="orderStatus"
-        >
-          <option class="text" value="processing">Processing</option>
-          <option class="text" value="fullfilled">Fulfilled</option>
-        </select>
-      </div>
       <table class="u-data-table ">
         <thead>
           <tr>
@@ -35,19 +36,59 @@
             <td class="">
               {{ item.status }}
             </td>
-            <td class="">
-              <div class=" d-flex justify-content-center">
-                <UIconBtn
-                  class="u-mx-1 qa-delete-teacher-btn"
-                  icon="icon-pencil"
-                  icon-color="grey"
-                  icon-hover-color="blue"
-                  bg-hover-color="white"
-                  hoverable
-                  @click.native="viewOrder(item)"
-                >
-                </UIconBtn>
+
+            <td class="pr-5 u-text-right">
+              <div class="actions-col actions-cell">
+                <b-dropdown no-caret>
+                  <template #button-content>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="feather feather-more-vertical"
+                    >
+                      <circle cx="12" cy="12" r="1"></circle>
+                      <circle cx="12" cy="5" r="1"></circle>
+                      <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                  </template>
+                  <b-dropdown-item>
+                    <UIconBtn
+                      class="u-mx-1 qa-delete-teacher-btn"
+                      icon="icon-trash"
+                      icon-color="grey"
+                      icon-hover-color="blue"
+                      bg-hover-color="white"
+                      hoverable
+                      @click.native="openModal(item)"
+                      title="Delete Order"
+                    >
+                    </UIconBtn>
+                  </b-dropdown-item>
+                  <b-dropdown-item>
+                    <UIconBtn
+                      class="u-mx-1 qa-delete-teacher-btn"
+                      icon="icon-pencil"
+                      icon-color="grey"
+                      icon-hover-color="blue"
+                      bg-hover-color="white"
+                      hoverable
+                      @click.native="viewOrder(item)"
+                      title="Edit Order"
+                    >
+                    </UIconBtn>
+                  </b-dropdown-item>
+                </b-dropdown>
               </div>
+            </td>
+            <td class="">
+              <div class=" d-flex justify-content-center"></div>
             </td>
           </tr>
         </tbody>
@@ -60,6 +101,12 @@
         </tbody>
       </table>
     </u-card>
+    <basic-modal
+      :title="'Are you sure to delete ' + itemForDelete.users + ' order ?'"
+      @save="confirmModal"
+      @closeModal="cancelModal"
+    >
+    </basic-modal>
   </div>
 </template>
 
@@ -68,6 +115,8 @@ import UCard from "@/components/common/UCard";
 import UIconBtn from "@/components/common/UIconBtn";
 import { OrderApi } from "@/api";
 import Loader from "@/components/Loader";
+import { BDropdown, BDropdownItem } from "bootstrap-vue";
+import BasicModal from "@/components/modals/BasicModal.vue";
 import moment from "moment";
 
 export default {
@@ -76,6 +125,9 @@ export default {
     // SelectLesson,
     UIconBtn,
     Loader,
+    BDropdown,
+    BDropdownItem,
+    BasicModal,
   },
   data: () => ({
     loading: true,
@@ -102,6 +154,7 @@ export default {
         value: "actions",
       },
     ],
+    itemForDelete: {},
   }),
 
   methods: {
@@ -133,6 +186,22 @@ export default {
         });
       });
       self.loading = false;
+    },
+    openModal(item) {
+      this.itemForDelete = item;
+      console.log(this.itemForDelete);
+      this.$modal.show("confirm-modal");
+    },
+    async confirmModal() {
+      this.$modal.hide("comment-modal");
+      this.loading = true;
+      await OrderApi.deleteOrder(this.itemForDelete.order_id);
+      await this.getOrdersList(this.orderStatus);
+      this.loading = false;
+    },
+    cancelModal() {
+      this.$modal.hide("confirm-modal");
+      this.itemForDelete = {};
     },
   },
   async mounted() {

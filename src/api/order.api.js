@@ -15,4 +15,7 @@ export default {
     formData.append("status", payload.status);
     return axios.post(`admin/order/status`, formData);
   },
+  deleteOrder(id) {
+    return axios.delete(`/admin/orders/${id}`);
+  },
 };

@@ -2,19 +2,24 @@
   <div class="c-nav-header u-flex is-align-center" ref="navHeader">
     <div class="c-nav-header--sidebar-button">
       <img
-          v-if="!$route.path.includes('/auth')"
-          @click="setSidebar(!getSidebarStatus)"
-          :src="getSidebarStatus ? require('@/assets/svg/sidebarClose.svg') :
-          require('@/assets/svg/sidebarButton.svg')"
-          :key="getSidebarStatus"
-          alt=""
-      >
+        v-if="!$route.path.includes('/auth')"
+        @click="setSidebar(!getSidebarStatus)"
+        :src="
+          getSidebarStatus
+            ? require('@/assets/svg/sidebarClose.svg')
+            : require('@/assets/svg/sidebarButton.svg')
+        "
+        :key="getSidebarStatus"
+        alt=""
+      />
     </div>
     <div class="c-nav-header__logo">
-      <img src="@/assets/logo.svg" alt="">
+      <img src="@/assets/logo.svg" alt="" />
     </div>
     <div class="c-nav-header__nav-outer u-flex">
-      <div class="c-nav-header__nav-wrap nav--wrap-desktop u-flex is-align-center">
+      <div
+        class="c-nav-header__nav-wrap nav--wrap-desktop u-flex is-align-center"
+      >
         <div class="c-nav-header__menu d-flex">
           <!--          <router-link class="c-nav-header__menu__item"-->
           <!--            v-for="item in navItems"-->
@@ -22,11 +27,11 @@
           <!--            :to="item.to"-->
           <!--          >-->
           <UBtn
-              v-for="item in navItems"
-              :key="item.id"
-              :href="item.href"
-              class="c-nav-header__menu__item"
-              tag="a"
+            v-for="item in navItems"
+            :key="item.id"
+            :href="item.href"
+            class="c-nav-header__menu__item"
+            tag="a"
           >
             {{ item.text }}
           </UBtn>
@@ -36,10 +41,10 @@
         <div class="c-nav-header__append u-ml-auto">
           <div class="u-flex is-align-center is-justify-center">
             <UBtn
-                color="primary"
-                size="medium"
-                href="https://yourtorahtutors.com"
-                tag="a"
+              color="primary"
+              size="medium"
+              href="https://yourtorahtutors.com"
+              tag="a"
             >
               Back to site
             </UBtn>
@@ -48,13 +53,11 @@
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
 <script>
-import {mapMutations, mapGetters} from 'vuex';
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   components: {},
@@ -62,32 +65,32 @@ export default {
     navItems: [
       {
         id: 1,
-        text: 'Contacts',
-        href: 'https://yourtorahtutors.com/contact-us/'
+        text: "Contacts",
+        href: "https://yourtorahtutors.com/contact-us/",
       },
       {
         id: 2,
-        text: 'About us',
-        href: 'https://yourtorahtutors.com/about-us/'
+        text: "About us",
+        href: "https://yourtorahtutors.com/about-us/",
       },
-    ]
+    ],
   }),
   methods: {
     ...mapMutations({
-      setAppTop: 'Application/setTop',
-      setSidebar: 'Application/setSidebarStatus'
+      setAppTop: "Application/setTop",
+      setSidebar: "Application/setSidebarStatus",
     }),
   },
   computed: {
-    ...mapGetters('Application', ['getSidebarStatus'])
+    ...mapGetters("Application", ["getSidebarStatus"]),
   },
   mounted() {
     this.setAppTop(this.$refs.navHeader.offsetHeight);
   },
   beforeDestroy() {
     this.setAppTop(0);
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -102,6 +105,7 @@ export default {
   right: 0;
   flex: 1 1 auto;
   max-width: 100%;
+  margin-bottom: 100px;
 
   height: 110px;
   background-color: #fff;
@@ -115,7 +119,7 @@ export default {
 
   &__menu {
     &__item {
-      color: #2C2C2C;
+      color: #2c2c2c;
       text-decoration: none;
       margin-right: 48px;
       background: transparent !important;
@@ -138,7 +142,7 @@ export default {
 }
 
 .random-letters {
-  color: #A3A3A3;
+  color: #a3a3a3;
   font-size: 17px;
   white-space: nowrap;
   word-break: keep-all;
@@ -173,14 +177,13 @@ export default {
     &__nav-outer {
       .c-nav-header__menu.d-flex {
         display: none;
-
       }
-      .c-nav-header__append .u-btn.u-btn_size_medium.u-btn_color_primary{
+      .c-nav-header__append .u-btn.u-btn_size_medium.u-btn_color_primary {
         display: none;
       }
-      .random-hebrew.u-ml-6{
+      .random-hebrew.u-ml-6 {
         margin-right: 10px;
-        margin-left: 0!important;
+        margin-left: 0 !important;
       }
     }
   }
