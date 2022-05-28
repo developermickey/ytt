@@ -20,7 +20,6 @@ export default {
     create(context, user) {
       context.commit("SET_LOADING", true);
       let url = `/admin/users/${ROLE_MAP[user.role]}s`;
-      console.log(user.role);
       if (user.role === 4) {
         url = "/school/students";
       }
@@ -59,11 +58,15 @@ export default {
       });
     },
 
-    fetchUser({ commit }, { id }) {
+    fetchUser({ commit }, { id, type }) {
       commit("SET_LOADING", true);
+      let url = "/admin/users/";
+      if (type === "school") {
+        url = "/school/students/";
+      }
       return new Promise((resolve, reject) => {
         axios
-          .get(`/admin/users/${id}`)
+          .get(`${url}${id}`)
           .then((response) => {
             commit("SET_USER", response.data);
             resolve();
@@ -72,24 +75,40 @@ export default {
           .then(() => commit("SET_LOADING", false));
       });
     },
-    updateUser(context, { id, user }) {
+    updateUser(context, { id, user, type }) {
       context.commit("SET_LOADING", true);
 
       const formData = new FormData();
       for (let field in user) {
         formData.append(field, user[field]);
       }
-
-      return new Promise((resolve, reject) => {
-        axios
-          .post(`admin/users/${id}`, formData)
-          .then((response) => {
-            context.commit("SET_USER", response.data);
-            resolve();
-          })
-          .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
-          .then(() => context.commit("SET_LOADING", false));
-      });
+      let url = "admin/users/";
+      if (type === "school") {
+        url = "school/students/";
+      }
+      if (type === "") {
+        return new Promise((resolve, reject) => {
+          axios
+            .post(`${url}${id}`, formData)
+            .then((response) => {
+              context.commit("SET_USER", response.data);
+              resolve();
+            })
+            .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
+            .then(() => context.commit("SET_LOADING", false));
+        });
+      } else if (type === "school") {
+        return new Promise((resolve, reject) => {
+          axios
+            .put(`${url}${id}`, formData)
+            .then((response) => {
+              context.commit("SET_USER", response.data);
+              resolve();
+            })
+            .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
+            .then(() => context.commit("SET_LOADING", false));
+        });
+      }
     },
     deleteUser(context, { userId }) {
       context.commit("SET_LOADING", true);

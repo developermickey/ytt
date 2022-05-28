@@ -102,7 +102,7 @@
                     </svg>
                   </template>
 
-                  <b-dropdown-item>
+                  <!-- <b-dropdown-item>
                     <div
                       class="u-mx-1 reward"
                       @click="
@@ -112,9 +112,9 @@
                     >
                       <img src="@/assets/svg/reward.svg" alt="" />
                     </div>
-                  </b-dropdown-item>
+                  </b-dropdown-item> -->
 
-                  <b-dropdown-item>
+                  <!-- <b-dropdown-item>
                     <UIconBtn
                       class="u-mx-1 qa-login-as-teacher-btn login-as-icon-btn"
                       icon="icon-enter"
@@ -126,12 +126,15 @@
                       title="Login as user"
                     >
                     </UIconBtn>
-                  </b-dropdown-item>
+                  </b-dropdown-item> -->
 
                   <b-dropdown-item>
                     <UIconBtn
                       class="u-mx-1 qa-edit-student-btn"
-                      :to="{ name: 'admin-user-edit', params: { id: item.id } }"
+                      :to="{
+                        name: 'school-user-edit',
+                        params: { id: item.id },
+                      }"
                       icon="icon-pencil"
                       icon-color="grey"
                       icon-hover-color="blue"
@@ -154,7 +157,7 @@
                     </UIconBtn>
                   </b-dropdown-item>
 
-                  <b-dropdown-item v-if="item.status === 'inactive'">
+                  <!-- <b-dropdown-item v-if="item.status === 'inactive'">
                     <UIconBtn
                       class="u-mx-1 qa-delete-student-btn"
                       icon="icon-eye2"
@@ -165,9 +168,9 @@
                       @click.native="activeStudent(item)"
                     >
                     </UIconBtn>
-                  </b-dropdown-item>
+                  </b-dropdown-item> -->
 
-                  <b-dropdown-item
+                  <!-- <b-dropdown-item
                     v-if="item.status === null || item.status === 'active'"
                   >
                     <UIconBtn
@@ -180,8 +183,8 @@
                       @click.native="deactiveStudent(item)"
                     >
                     </UIconBtn>
-                  </b-dropdown-item>
-                  <b-dropdown-item
+                  </b-dropdown-item> -->
+                  <!-- <b-dropdown-item
                     v-if="item.status === null || item.status === 'active'"
                   >
                     <img
@@ -190,15 +193,15 @@
                       alt=""
                       @click="callStudent(item)"
                     />
-                  </b-dropdown-item>
-                  <b-dropdown-item>
+                  </b-dropdown-item> -->
+                  <!-- <b-dropdown-item>
                     <img
                       class="ml-2 pb-3 mt-1"
                       src="@/assets/svg/comment.svg"
                       alt=""
                       @click="comment(item)"
                     />
-                  </b-dropdown-item>
+                  </b-dropdown-item> -->
                 </b-dropdown>
               </div>
               <div class="calledDate">
@@ -338,6 +341,15 @@ export default {
       this.student.modalTitle = `Are you sure to active ${item.name} ?`;
       this.$modal.show("confirm-modal");
     },
+    deleteUserAlert(item) {
+      this.student.payloadData = {
+        studentId: item.id,
+        status: "delete",
+      };
+      this.student.action = "delete";
+      this.student.modalTitle = `Are you sure to delete ${item.name} ?`;
+      this.$modal.show("confirm-modal");
+    },
     deactiveStudent(item) {
       this.student.payloadData = {
         studentId: item.id,
@@ -368,7 +380,6 @@ export default {
     },
     async confirmModal() {
       this.$modal.hide("confirm-modal");
-      this.$modal.hide("comment-modal");
       this.loading = true;
       if (this.student.action === "active") {
         await StudentsApi.changeStudentStatus(this.student.payloadData);
@@ -380,6 +391,8 @@ export default {
         if (this.student.payloadData.comment !== "") {
           await StudentsApi.comment(this.student.payloadData);
         }
+      } else if (this.student.action === "delete") {
+        await StudentsApi.deleteBySchool(this.student.payloadData);
       }
       await this.fetchStudentsList(SCHOOL);
       this.loading = false;

@@ -24,4 +24,7 @@ export default {
     data.append("comment", payload.comment);
     return await axios.post(`admin/comment`, data);
   },
+  async deleteBySchool(payload) {
+    return await axios.delete(`school/students/${payload.studentId}`);
+  },
 };
