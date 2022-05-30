@@ -100,7 +100,7 @@ export default {
       } else if (type === "school") {
         return new Promise((resolve, reject) => {
           axios
-            .put(`${url}${id}`, formData)
+            .post(`${url}${id}`, formData)
             .then((response) => {
               context.commit("SET_USER", response.data);
               resolve();
