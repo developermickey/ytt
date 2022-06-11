@@ -218,6 +218,7 @@
           </tr>
         </tbody>
       </table>
+      <div class="my-10"></div>
     </u-card>
     <select-teacher
       v-model="currentSelectedTeacher"
@@ -260,6 +261,7 @@ import GiveCoins from "@/components/modals/GiveCoins";
 import Loader from "@/components/Loader";
 import BasicModal from "@/components/modals/BasicModal.vue";
 import CommentModal from "@/components/modals/CommentModal.vue";
+// import Pagination from "@/components/Pagination.vue";
 
 import { StudentsApi } from "@/api";
 
@@ -278,6 +280,7 @@ export default {
     Loader,
     BasicModal,
     CommentModal,
+    // Pagination,
   },
   mixins: [DeleteUserMixin],
   data: () => ({

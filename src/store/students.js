@@ -6,9 +6,11 @@ export default {
   namespaced: true,
   state: {
     loading: false,
-    studentsList: null,
+    studentsList: [],
     student: null,
-    filteredStudentsList: null,
+    filteredStudentsList: [],
+    paginationLinks: [],
+    activeLink: 1,
   },
   mutations: {
     SET_LOADING(state, payload) {
@@ -39,37 +41,50 @@ export default {
       state.filteredStudentsList = null;
     },
     FILTER_STUDENTS_LIST(state, payload) {
-      state.filteredStudentsList = state.studentsList.filter((imtem) => {
-        return imtem.name.toLowerCase().includes(payload.toLowerCase());
+      state.filteredStudentsList = state.studentsList.filter((student) => {
+        return student.name
+          .toLowerCase()
+          .includes(payload.toLowerCase() && student !== null);
       });
+    },
+    PAGINATION(state, links) {
+      state.paginationLinks = links;
+    },
+    SET_PAGINATION_ACTIVE(state, payload) {
+      state.activeLink = payload;
     },
   },
   actions: {
     async fetchStudentsList(context, role) {
-      context.commit("SET_LOADING", true);
-
-      let url = "",
-        params = {};
+      let url = "";
+      let params = {};
       if (role === ADMIN) {
         url = `/${ROLE_MAP[ADMIN]}/users`;
         params.role = STUDENT;
+        params.perPage = 20;
       } else if (role === TEACHER) {
         url = `/${ROLE_MAP[TEACHER]}/students`;
       } else if (role === SCHOOL) {
         url = `/school/students?role=3`;
+        params.role = STUDENT;
+        params.perPage = 20;
       }
+
       await axios
         // .get("/admin/getStudentTest")
         .get(url, { params })
         .then((response) => {
-          console.log(response.data);
-          let inactiveStudentList = response.data.filter(
-            (x) => x.status === "inactive"
-          );
+          let res = "";
+          if (role === ADMIN) {
+            res = response.data.data;
+          } else {
+            res = response.data;
+          }
+          let inactiveStudentList = res.filter((x) => x.status === "inactive");
           inactiveStudentList.map((e) => {
             e.color = "#d3d3d3";
           });
-          let activeStudentList = response.data.filter(
+          let activeStudentList = res.filter(
             (x) => x.status === "active" || x.status === null
           );
           let whiteBlock = activeStudentList.filter(
@@ -104,7 +119,6 @@ export default {
               greenBlock.push(e);
             }
           });
-          console.log(greenBlock);
           let mergeStudents = [
             ...whiteBlock,
             ...redBlockTwo,
@@ -113,6 +127,13 @@ export default {
             ...inactiveStudentList,
           ];
           context.commit("SET_STUDENTS_LIST", mergeStudents);
+          if (role === ADMIN) {
+            context.commit("PAGINATION", response.data.meta.links);
+            context.commit(
+              "SET_PAGINATION_ACTIVE",
+              response.data.meta.links[1].url
+            );
+          }
           context.commit("SET_LOADING", false);
         })
         .catch((err) => {
@@ -160,11 +181,81 @@ export default {
           .then(() => context.commit("SET_LOADING", false));
       });
     },
+    async setPagination(context, payload) {
+      if (payload.url !== null) {
+        context.commit("SET_LOADING", true);
+        let params = { perPage: 20, role: 3 };
+
+        await axios
+          .get(payload.url, { params })
+          .then((response) => {
+            let inactiveStudentList = response.data.data.filter(
+              (x) => x.status === "inactive"
+            );
+            inactiveStudentList.map((e) => {
+              e.color = "#d3d3d3";
+            });
+            let activeStudentList = response.data.data.filter(
+              (x) => x.status === "active" || x.status === null
+            );
+            let whiteBlock = activeStudentList.filter(
+              (x) => x.called_date === null
+            );
+            whiteBlock.map((e) => {
+              e.color = "white";
+            });
+            let calledStudentList = activeStudentList.filter(
+              (x) => x.called_date !== null
+            );
+            let redBlockTwo = [];
+            let yellowBlock = [];
+            let greenBlock = [];
+            let currentDate = moment();
+            calledStudentList.map((e) => {
+              let called_date = "";
+              called_date = moment(
+                e.called_date,
+                "YYYY-MM-DD HH:mm:ss "
+              ).format("YYYY-MM-DD");
+              let difference = "";
+              // week
+              difference = currentDate.diff(called_date, "week");
+              if (difference > 6) {
+                e.color = "red";
+                redBlockTwo.push(e);
+              } else if (difference >= 4 && difference <= 6) {
+                yellowBlock.push(e);
+                e.color = "yellow";
+              } else {
+                e.color = "green";
+                greenBlock.push(e);
+              }
+            });
+            let mergeStudents = [
+              ...whiteBlock,
+              ...redBlockTwo,
+              ...yellowBlock,
+              ...greenBlock,
+              ...inactiveStudentList,
+            ];
+            context.commit("SET_STUDENTS_LIST", mergeStudents);
+            context.commit("SET_PAGINATION_ACTIVE", payload.url);
+            context.commit("PAGINATION", response.data.meta.links);
+            context.commit("SET_LOADING", false);
+          })
+          .catch((err) => {
+            ErrorHelper.getErrorWithMessage(err);
+            context.commit("SET_LOADING", false);
+          });
+      }
+    },
   },
   getters: {
     loading: (state) => state.loading,
     studentsList: (state) => state.studentsList,
     filteredStudentsList: (state) => state.filteredStudentsList,
     student: (state) => state.student,
+    pagination: (state) => state.paginationLinks,
+    activeLink: (state) => state.activeLink,
   },
 };

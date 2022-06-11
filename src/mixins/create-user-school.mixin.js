@@ -15,10 +15,24 @@ export default {
     avatar: null,
     role: 4,
     school_id: null,
+    teacher_id: null,
+    loaded: false,
+    paidFor: false,
+    product: {
+      price: 777.77,
+      description: "leg lamp from that one movie",
+      img: "./assets/lamp.jpg",
+    },
   }),
   components: {
     UTextField,
     FileUpload,
+  },
+  mounted() {
+    const script = document.createElement("script");
+    script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.VUE_APP_PAYPAL_CLIENT_ID}`;
+    script.addEventListener("load", this.setLoaded);
+    document.body.appendChild(script);
   },
   computed: {
     ...mapGetters("Users", ["loading"]),
@@ -48,6 +62,10 @@ export default {
       return formData;
     },
     submit() {
+      this.$modal.show("confirm-modal");
+    },
+    async confirmModal() {
+      this.$modal.hide("confirm-modal");
       let data = this.collectPostData();
       this.create(data)
         .then(() => {
@@ -64,6 +82,38 @@ export default {
             type: "error",
           });
         });
+    },
+    async cancleModal() {
+      this.$modal.hide("confirm-modal");
+    },
+    async setLoaded() {
+      this.loaded = true;
+      window.paypal
+        .Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  description: this.product.description,
+                  amount: {
+                    currency_code: "USD",
+                    value: this.product.price,
+                  },
+                },
+              ],
+            });
+          },
+          onApprove: async (data, actions) => {
+            const order = await actions.order.capture();
+            this.data;
+            this.paidFor = true;
+            console.log(order);
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        })
+        .render(this.$refs.paypal);
     },
   },
 };
