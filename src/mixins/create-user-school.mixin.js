@@ -1,7 +1,7 @@
 import UTextField from "@/components/common/UTextField";
 import FileUpload from "@/components/common/FileUpload/FileUpload";
 
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   data: () => ({
@@ -16,27 +16,15 @@ export default {
     role: 4,
     school_id: null,
     teacher_id: null,
-    loaded: false,
-    paidFor: false,
-    product: {
-      price: 777.77,
-      description: "leg lamp from that one movie",
-      img: "./assets/lamp.jpg",
-    },
+    loading: false,
+    studentId: null,
   }),
   components: {
     UTextField,
     FileUpload,
   },
-  mounted() {
-    const script = document.createElement("script");
-    script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.VUE_APP_PAYPAL_CLIENT_ID}`;
-    script.addEventListener("load", this.setLoaded);
-    document.body.appendChild(script);
-  },
-  computed: {
-    ...mapGetters("Users", ["loading"]),
-  },
+  mounted() {},
+
   methods: {
     ...mapActions("Users", {
       create: "create",
@@ -61,59 +49,36 @@ export default {
 
       return formData;
     },
-    submit() {
-      this.$modal.show("confirm-modal");
-    },
-    async confirmModal() {
-      this.$modal.hide("confirm-modal");
+    async submit() {
+      this.loading = true;
       let data = this.collectPostData();
-      this.create(data)
-        .then(() => {
-          this.$router.push({ name: "school-users-all" });
-          this.$notify({
-            title: "User successfully created!",
-            type: "success",
-          });
+      let self = this;
+      await this.create(data)
+        .then((res) => {
+          console.log(res);
+          this.loading = false;
+          this.studentId = res.data.id;
+          // this.$notify({
+          //   title: "User successfully created!",
+          //   type: "success",
+          // });
+          self.$modal.show("confirm-modal");
         })
         .catch(({ message }) => {
+          this.loading = false;
           this.$notify({
-            title: "User creation error",
+            title: "User creation error ( unique Email)",
             text: message,
             type: "error",
           });
         });
     },
+    async confirmModal() {
+      this.$modal.hide("confirm-modal");
+      this.$router.push("/school/payment/" + this.studentId);
+    },
     async cancleModal() {
       this.$modal.hide("confirm-modal");
-    },
-    async setLoaded() {
-      this.loaded = true;
-      window.paypal
-        .Buttons({
-          createOrder: (data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  description: this.product.description,
-                  amount: {
-                    currency_code: "USD",
-                    value: this.product.price,
-                  },
-                },
-              ],
-            });
-          },
-          onApprove: async (data, actions) => {
-            const order = await actions.order.capture();
-            this.data;
-            this.paidFor = true;
-            console.log(order);
-          },
-          onError: (err) => {
-            console.log(err);
-          },
-        })
-        .render(this.$refs.paypal);
     },
   },
 };

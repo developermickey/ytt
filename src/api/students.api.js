@@ -6,6 +6,11 @@ export default {
       teacher: teacherId,
     });
   },
+  assignTeacherBySchool(studentId, teacherId) {
+    return axios.post(`/school/users/${studentId}/teacher`, {
+      teacher: teacherId,
+    });
+  },
   async changeStudentStatus(payload) {
     let data = new FormData();
     data.append("id", payload.studentId);

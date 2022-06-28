@@ -42,9 +42,7 @@ export default {
     },
     FILTER_STUDENTS_LIST(state, payload) {
       state.filteredStudentsList = state.studentsList.filter((student) => {
-        return student.name
-          .toLowerCase()
-          .includes(payload.toLowerCase() && student !== null);
+        return student.name.toLowerCase().includes(payload.toLowerCase());
       });
     },
     PAGINATION(state, links) {
@@ -66,9 +64,8 @@ export default {
         url = `/${ROLE_MAP[TEACHER]}/students`;
       } else if (role === SCHOOL) {
         url = `/school/students?role=3`;
-        params.role = STUDENT;
-        params.perPage = 20;
       }
+      context.commit("SET_LOADING", true);
 
       await axios
         // .get("/admin/getStudentTest")
@@ -126,6 +123,33 @@ export default {
             ...greenBlock,
             ...inactiveStudentList,
           ];
+
+          for (let index = 0; index < mergeStudents.length; index++) {
+            const element = mergeStudents[index];
+            if (element.license_expire_at === null) {
+              element.needToPay = true;
+            }
+          }
+
+          let canPay = "";
+          let expireDate = "";
+          for (let index = 0; index < mergeStudents.length; index++) {
+            const element = mergeStudents[index];
+            if (element.license_expire_at !== null) {
+              expireDate = "";
+              expireDate = moment(
+                element.license_expire_at,
+                "YYYY-MM-DD HH:mm:ss"
+              ).format("YYYY-MM-DD");
+              canPay = "";
+              canPay = currentDate.isSameOrAfter(expireDate, "days");
+              if (canPay) {
+                element.needToPay = true;
+              } else {
+                element.needToPay = false;
+              }
+            }
+          }
           context.commit("SET_STUDENTS_LIST", mergeStudents);
           if (role === ADMIN) {
             context.commit("PAGINATION", response.data.meta.links);

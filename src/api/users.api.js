@@ -1,59 +1,61 @@
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  getPage(params, role = 'admin'){
+  getPage(params, role = "admin") {
     //Possible params
     // role - teacher, student
     return axios.get(`/${role}/users`, {
-      params: params
+      params: params,
     });
   },
 
-  getSingle(id, role = 'admin'){
-    return axios.get(role + '/users/' + id);
+  getSingle(id, role = "admin") {
+    return axios.get(role + "/users/" + id);
   },
 
-  getRoles(){
-    return axios.get('/roles');
+  getRoles() {
+    return axios.get("/roles");
   },
 
-  create(data){
-
+  create(data) {
     let options = {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
-    }
-    
-    return axios.post('/admin/users', data, options);
+    };
+
+    return axios.post("/admin/users", data, options);
   },
-  
-  update(id, data){
-    return axios.put('/admin/users/' + id, data);
+
+  update(id, data) {
+    return axios.put("/admin/users/" + id, data);
   },
 
   uploadAvatar(file, progressHandler = null) {
-
     let data = new FormData();
-    data.append('files[]', file);
+    data.append("files[]", file);
 
     let options = {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
-    }
+    };
 
-    if(progressHandler !== null){
+    if (progressHandler !== null) {
       options.onUploadProgress = progressHandler;
     }
 
-    return axios.post('/users/avatar', data, options);
+    return axios.post("/users/avatar", data, options);
   },
 
-  addAccessToLesson(userId, data){
+  addAccessToLesson(userId, data) {
     return axios.post(`/admin/users/${userId}/lessons/access`, data);
   },
 
-
-  
-}
+  payStudent(payload) {
+    return axios.post(
+      `/${payload.payBy}/students/${payload.studentId}/payment`,
+      payload.payload
+    );
+  },
+};

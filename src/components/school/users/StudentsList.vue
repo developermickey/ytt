@@ -64,45 +64,56 @@
             </td>
             <td class="u-pr-13 u-text-right">
               <div class="actions-col actions-cell">
-                <UBtn
-                  class="qa-assign-students-teacher-btn u-mr-1 u-pr-3 u-pl-3"
-                  color="primary"
-                  size="small"
-                  @click="openSelectTeacherModal(item)"
-                  v-if="!item.teacher_id"
-                >
-                  Add teacher
-                </UBtn>
-                <UBtn
-                  class="qa-change-students-teacher-btn u-mr-1 u-pr-3 u-pl-3"
-                  color="primary"
-                  size="small"
-                  @click="openSelectTeacherModal(item)"
-                  v-else
-                >
-                  {{ getTeacherName(item.teacher_id) }}
-                </UBtn>
-                <b-dropdown no-caret>
-                  <template #button-content>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="feather feather-more-vertical"
-                    >
-                      <circle cx="12" cy="12" r="1"></circle>
-                      <circle cx="12" cy="5" r="1"></circle>
-                      <circle cx="12" cy="19" r="1"></circle>
-                    </svg>
-                  </template>
+                <template v-if="item.needToPay">
+                  <UBtn
+                    class=" mr-4"
+                    color="primary outline"
+                    size="small"
+                    :to="'/school/payment/' + item.id"
+                  >
+                    Pay
+                  </UBtn>
+                </template>
+                <template v-else>
+                  <UBtn
+                    class="qa-assign-students-teacher-btn u-mr-1 u-pr-3 u-pl-3"
+                    color="primary"
+                    size="small"
+                    @click="openSelectTeacherModal(item)"
+                    v-if="!item.teacher_id"
+                  >
+                    Add teacher
+                  </UBtn>
+                  <UBtn
+                    class="qa-change-students-teacher-btn u-mr-1 u-pr-3 u-pl-3"
+                    color="primary"
+                    size="small"
+                    @click="openSelectTeacherModal(item)"
+                    v-else
+                  >
+                    {{ getTeacherName(item.teacher_id) }}
+                  </UBtn>
+                  <b-dropdown no-caret>
+                    <template #button-content>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-more-vertical"
+                      >
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                      </svg>
+                    </template>
 
-                  <!-- <b-dropdown-item>
+                    <!-- <b-dropdown-item>
                     <div
                       class="u-mx-1 reward"
                       @click="
@@ -114,7 +125,7 @@
                     </div>
                   </b-dropdown-item> -->
 
-                  <!-- <b-dropdown-item>
+                    <!-- <b-dropdown-item>
                     <UIconBtn
                       class="u-mx-1 qa-login-as-teacher-btn login-as-icon-btn"
                       icon="icon-enter"
@@ -128,36 +139,36 @@
                     </UIconBtn>
                   </b-dropdown-item> -->
 
-                  <b-dropdown-item>
-                    <UIconBtn
-                      class="u-mx-1 qa-edit-student-btn"
-                      :to="{
-                        name: 'school-user-edit',
-                        params: { id: item.id },
-                      }"
-                      icon="icon-pencil"
-                      icon-color="grey"
-                      icon-hover-color="blue"
-                      bg-hover-color="white"
-                      hoverable
-                    >
-                    </UIconBtn>
-                  </b-dropdown-item>
+                    <b-dropdown-item>
+                      <UIconBtn
+                        class="u-mx-1 qa-edit-student-btn"
+                        :to="{
+                          name: 'school-user-edit',
+                          params: { id: item.id },
+                        }"
+                        icon="icon-pencil"
+                        icon-color="grey"
+                        icon-hover-color="blue"
+                        bg-hover-color="white"
+                        hoverable
+                      >
+                      </UIconBtn>
+                    </b-dropdown-item>
 
-                  <b-dropdown-item>
-                    <UIconBtn
-                      class="u-mx-1 qa-delete-student-btn"
-                      icon="icon-trash"
-                      icon-color="grey"
-                      icon-hover-color="blue"
-                      bg-hover-color="white"
-                      hoverable
-                      @click.native="deleteUserAlert(item)"
-                    >
-                    </UIconBtn>
-                  </b-dropdown-item>
+                    <b-dropdown-item>
+                      <UIconBtn
+                        class="u-mx-1 qa-delete-student-btn"
+                        icon="icon-trash"
+                        icon-color="grey"
+                        icon-hover-color="blue"
+                        bg-hover-color="white"
+                        hoverable
+                        @click.native="deleteUserAlert(item)"
+                      >
+                      </UIconBtn>
+                    </b-dropdown-item>
 
-                  <!-- <b-dropdown-item v-if="item.status === 'inactive'">
+                    <!-- <b-dropdown-item v-if="item.status === 'inactive'">
                     <UIconBtn
                       class="u-mx-1 qa-delete-student-btn"
                       icon="icon-eye2"
@@ -170,7 +181,7 @@
                     </UIconBtn>
                   </b-dropdown-item> -->
 
-                  <!-- <b-dropdown-item
+                    <!-- <b-dropdown-item
                     v-if="item.status === null || item.status === 'active'"
                   >
                     <UIconBtn
@@ -184,7 +195,7 @@
                     >
                     </UIconBtn>
                   </b-dropdown-item> -->
-                  <!-- <b-dropdown-item
+                    <!-- <b-dropdown-item
                     v-if="item.status === null || item.status === 'active'"
                   >
                     <img
@@ -194,7 +205,7 @@
                       @click="callStudent(item)"
                     />
                   </b-dropdown-item> -->
-                  <!-- <b-dropdown-item>
+                    <!-- <b-dropdown-item>
                     <img
                       class="ml-2 pb-3 mt-1"
                       src="@/assets/svg/comment.svg"
@@ -202,10 +213,11 @@
                       @click="comment(item)"
                     />
                   </b-dropdown-item> -->
-                </b-dropdown>
-              </div>
-              <div class="calledDate">
-                {{ formatDate(item.called_date) }}
+                  </b-dropdown>
+                  <div class="calledDate">
+                    {{ formatDate(item.called_date) }}
+                  </div>
+                </template>
               </div>
             </td>
           </tr>
@@ -432,11 +444,12 @@ export default {
       if (this.currentSelectedTeacher) {
         teacherId = this.currentSelectedTeacher.id;
       }
-      StudentsApi.assignTeacher(this.currentSelectedStudent.id, teacherId).then(
-        (response) => {
-          this.currentSelectedStudent.teacher_id = response.data.teacher_id;
-        }
-      );
+      StudentsApi.assignTeacherBySchool(
+        this.currentSelectedStudent.id,
+        teacherId
+      ).then((response) => {
+        this.currentSelectedStudent.teacher_id = response.data.teacher_id;
+      });
     },
     onLoginAsUserClick(user) {
       this.loginAsUser(user.id)
@@ -463,6 +476,10 @@ export default {
       this.$modal.hide("confirm-modal");
       this.commentProps = false;
       this.$modal.hide("comment-modal");
+    },
+    needCall(date) {
+      console.log(date);
+      return false;
     },
   },
   async mounted() {

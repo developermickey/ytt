@@ -6,6 +6,7 @@ import settings from "./settings";
 import coins from "./coins";
 import products from "./products";
 import order from "./order";
+import Transaction from "@/views/admin/Transaction";
 // import school from "./school";
 
 import { ADMIN } from "@/constants/roles";
@@ -19,7 +20,19 @@ const routes = {
     auth: true,
     roleAccess: ADMIN,
   },
-  children: [lessons, users, settings, coins, products, order],
+  children: [
+    lessons,
+    users,
+    settings,
+    coins,
+    products,
+    order,
+    {
+      path: "transaction",
+      component: Transaction,
+      name: "admin-transaction",
+    },
+  ],
 };
 
 export default routesExtendMeta(routes);

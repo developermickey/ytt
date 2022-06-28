@@ -141,7 +141,6 @@
         >
           Save
         </UBtn>
-        <div class="ml-4" ref="paypal"></div>
       </div>
     </div>
     <basic-modal
