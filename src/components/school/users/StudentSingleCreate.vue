@@ -71,10 +71,10 @@
             ></u-text-field>
           </div>
           <div class="u-col-6 u-mb-8 create-item">
-            <!-- <label for="teacher">Select School</label>
+            <label>Select Teacher</label>
             <multiselect
-              v-model="school_id"
-              :options="schoolList === null ? [] : schoolList"
+              v-model="teacher_id"
+              :options="teacherList === null ? [] : teacherList"
               :close-on-select="true"
               label="name"
               :track-by="'id'"
@@ -82,8 +82,8 @@
               :multiple="false"
               :value="'id'"
               :option-height="500"
-              :disabled="true"
-            ></multiselect> -->
+              :disabled="false"
+            ></multiselect>
           </div>
           <div class="u-col-6 u-mb-8 create-item">
             <ValidationProvider
@@ -143,30 +143,41 @@
         </UBtn>
       </div>
     </div>
+    <basic-modal
+      title="Create Student for pay $99?Please Confirm"
+      @save="confirmModal"
+      @closeModal="cancleModal"
+    >
+    </basic-modal>
   </ValidationObserver>
 </template>
 
 <script>
 import CreateUserSchoolMixin from "@/mixins/create-user-school.mixin";
 import { SCHOOL } from "@/constants/roles";
-// import Multiselect from "vue-multiselect";
-
+import Multiselect from "vue-multiselect";
+import BasicModal from "@/components/modals/BasicModal.vue";
+import { mapActions, mapGetters } from "vuex";
 export default {
   mixins: [CreateUserSchoolMixin],
   data: () => ({
     role: SCHOOL,
   }),
   components: {
-    // Multiselect,
+    Multiselect,
+    BasicModal,
   },
-  // async mounted() {
-  //   await this.$store.dispatch("School/fetchSchoolList");
-  // },
-  // computed: {
-  //   schoolList() {
-  //     return this.$store.getters["School/schoolList"];
-  //   },
-  // },
+  async mounted() {
+    this.fetchTeachersList(SCHOOL);
+  },
+  computed: {
+    ...mapGetters("Teachers", {
+      teacherList: "filteredTeachersList",
+    }),
+  },
+  methods: {
+    ...mapActions("Teachers", ["fetchTeachersList"]),
+  },
 };
 </script>
 

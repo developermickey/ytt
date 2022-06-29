@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="loading">
+    <div v-if="loading || reload">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
     <u-card v-else>
@@ -215,6 +215,7 @@
           </tr>
         </tbody>
       </table>
+      <pagination></pagination>
     </u-card>
     <select-teacher
       v-model="currentSelectedTeacher"
@@ -262,7 +263,7 @@ import { StudentsApi } from "@/api";
 import { mapActions, mapMutations, mapGetters } from "vuex";
 import { ADMIN } from "@/constants/roles";
 import DeleteUserMixin from "@/mixins/delete-user.mixin";
-
+import Pagination from "@/components/Pagination.vue";
 export default {
   components: {
     UCard,
@@ -274,6 +275,7 @@ export default {
     Loader,
     BasicModal,
     CommentModal,
+    Pagination,
   },
   mixins: [DeleteUserMixin],
   data: () => ({
@@ -316,6 +318,7 @@ export default {
     ...mapGetters("Students", {
       items: "filteredStudentsList",
       loading: "loading",
+      reload: "loading",
     }),
     ...mapGetters("Teachers", {
       teachers: "teachersList",

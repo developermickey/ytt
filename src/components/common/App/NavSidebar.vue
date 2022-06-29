@@ -117,6 +117,14 @@ export default {
           active: false,
           pngIcon: true,
         },
+        {
+          id: 6,
+          text: "Transaction",
+          to: { name: "admin-transaction" },
+          icon: "coin",
+          active: false,
+          pngIcon: true,
+        },
       ],
       [TEACHER]: [
         {

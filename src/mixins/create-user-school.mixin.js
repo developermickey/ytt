@@ -1,7 +1,7 @@
 import UTextField from "@/components/common/UTextField";
 import FileUpload from "@/components/common/FileUpload/FileUpload";
 
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   data: () => ({
@@ -15,14 +15,16 @@ export default {
     avatar: null,
     role: 4,
     school_id: null,
+    teacher_id: null,
+    loading: false,
+    studentId: null,
   }),
   components: {
     UTextField,
     FileUpload,
   },
-  computed: {
-    ...mapGetters("Users", ["loading"]),
-  },
+  mounted() {},
+
   methods: {
     ...mapActions("Users", {
       create: "create",
@@ -47,23 +49,36 @@ export default {
 
       return formData;
     },
-    submit() {
+    async submit() {
+      this.loading = true;
       let data = this.collectPostData();
-      this.create(data)
-        .then(() => {
-          this.$router.push({ name: "school-users-all" });
-          this.$notify({
-            title: "User successfully created!",
-            type: "success",
-          });
+      let self = this;
+      await this.create(data)
+        .then((res) => {
+          console.log(res);
+          this.loading = false;
+          this.studentId = res.data.id;
+          // this.$notify({
+          //   title: "User successfully created!",
+          //   type: "success",
+          // });
+          self.$modal.show("confirm-modal");
         })
         .catch(({ message }) => {
+          this.loading = false;
           this.$notify({
-            title: "User creation error",
+            title: "User creation error ( unique Email)",
             text: message,
             type: "error",
           });
         });
+    },
+    async confirmModal() {
+      this.$modal.hide("confirm-modal");
+      this.$router.push("/school/payment/" + this.studentId);
+    },
+    async cancleModal() {
+      this.$modal.hide("confirm-modal");
     },
   },
 };

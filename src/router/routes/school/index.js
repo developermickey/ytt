@@ -1,6 +1,7 @@
 import School from "@/views/school/School";
 import StudentSingleCreate from "@/components/school/users/StudentSingleCreate";
 import EditSingle from "@/views/school/users/EditSingle";
+import Payment from "@/views/school/Payment";
 import user from "./user";
 // import students from "./students";
 import settings from "./settings";
@@ -28,6 +29,11 @@ const routes = {
       path: "school-user-edit/:id",
       component: EditSingle,
       name: "school-user-edit",
+    },
+    {
+      path: "payment/:studentId",
+      component: Payment,
+      name: "school-payment",
     },
   ],
 };

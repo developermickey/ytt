@@ -16,12 +16,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 import { TEACHER } from "@/constants/roles";
 
 import SelectLesson from "@/components/modals/SelectLesson";
 import StudentsListItem from "@/components/teacher/students/StudentsListItem";
-
 
 export default {
   data: () => ({
@@ -30,49 +29,49 @@ export default {
   }),
   components: {
     StudentsListItem,
-    SelectLesson
+    SelectLesson,
   },
   methods: {
-    ...mapActions('Students', {
-      fetchStudents : 'fetchStudentsList',
-      addAccessToLessons: 'addAccessToLessons',
+    ...mapActions("Students", {
+      fetchStudents: "fetchStudentsList",
+      addAccessToLessons: "addAccessToLessons",
     }),
-    openSelectLessonsModal(student){
+    openSelectLessonsModal(student) {
       this.selectedStudent = student;
-      this.selectedLessons = [ ...student.lessons ];
-      this.$modal.show('select-lesson');
+      this.selectedLessons = [...student.lessons];
+      this.$modal.show("select-lesson");
     },
-    shareLessonsToStudent(){
+    shareLessonsToStudent() {
       this.addAccessToLessons({
         studentId: this.selectedStudent.id,
-        lessons: this.selectedLessons.map(e => e.id),
+        lessons: this.selectedLessons.map((e) => e.id),
       });
     },
   },
   computed: {
-    ...mapGetters('Students', {
-      students: 'studentsList'
-    })
+    ...mapGetters("Students", {
+      students: "studentsList",
+    }),
   },
-  mounted(){
+  mounted() {
     this.fetchStudents(TEACHER);
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
 @import "@/styles/mixins";
 
-.teacher-students-list{
-  .teacher-students-list-item{
+.teacher-students-list {
+  .teacher-students-list-item {
     padding-top: 26px;
     padding-bottom: 23px;
-    border-bottom: 1px solid rgba(0,0,0,.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   }
 }
 @include media(">phone", "<=tablet") {
-  .teacher-students-list{
-    .teacher-students-list-item{
+  .teacher-students-list {
+    .teacher-students-list-item {
       padding: 10px;
     }
   }
