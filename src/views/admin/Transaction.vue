@@ -1,6 +1,6 @@
 <template>
   <div class="u-container u-ml-auto u-mr-auto u-pt-15">
-    <div class="u-text-h1 u-mr-6 mb-5">Transaction</div>
+    <div class="u-text-h1 u-mr-6 mb-5">Paid Students</div>
     <div v-if="loading">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
@@ -17,10 +17,15 @@
         </thead>
         <tbody v-if="orderList && orderList.length">
           <tr v-for="item in orderList" class="text-center" :key="item.id">
-            <td class="">{{ item.transaction_id }}</td>
             <td class="">{{ item.student_name }}</td>
+            <td class="">{{ item.school_name }}</td>
+            <td class="">{{ item.amount }}</td>
+            <td class="">{{ item.transaction_id }}</td>
             <td class="">
-              {{ item.status }}
+              {{ filterDate(item.created_at) }}
+            </td>
+            <td class="">
+              {{ filterDate(item.license_expire_at) }}
             </td>
             <!-- 
             <td class="pr-5 u-text-right">
@@ -97,13 +102,14 @@
 </template>
 
 <script>
+// import moment from "moment";
 import UCard from "@/components/common/UCard";
 import UIconBtn from "@/components/common/UIconBtn";
 import { OrderApi } from "@/api";
 import Loader from "@/components/Loader";
 // import { BDropdown, BDropdownItem } from "bootstrap-vue";
 import BasicModal from "@/components/modals/BasicModal.vue";
-// import moment from "moment";
+import moment from "moment";
 
 export default {
   components: {
@@ -121,10 +127,23 @@ export default {
     orderStatus: "processing",
     columns: [
       {
+        text: "Student Name",
+      },
+      {
+        text: "School Name",
+      },
+      {
+        text: "Amount",
+      },
+      {
         text: "Transaction id",
       },
       {
-        text: "Student Name",
+        text: "Paid Date",
+      },
+
+      {
+        text: "Expiry Date",
       },
     ],
     itemForDelete: {},
@@ -134,13 +153,14 @@ export default {
     viewOrder(item) {
       this.$router.push(`/admin/order/details/${item.order_id}`);
     },
+    filterDate(date) {
+      return moment(date, "YYYY-MM-DD HH:mm:ss").format("DD-MM-YYYY");
+    },
     async getOrdersList() {
       let self = this;
       self.loading = true;
       await OrderApi.getTransaction().then((e) => {
-        console.log(e.data.result);
         self.orderList = e.data.result;
-        console.log();
         self.loading = false;
       });
     },

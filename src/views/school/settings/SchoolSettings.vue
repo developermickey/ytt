@@ -35,7 +35,7 @@
             <div class="flex flex-wrap">
               <div class="head">
                 <div class="u-text-h2 u-mb-10 u-mt-10 head-title">
-                  Settings
+                  Your Profile
                 </div>
               </div>
             </div>
@@ -58,12 +58,12 @@
               <div class="u-col-6 u-mb-8 create-item">
                 <ValidationProvider
                   rules="required"
-                  name="Principle Name"
+                  name="Principal Name"
                   v-slot="{ errors }"
                 >
                   <u-text-field
-                    label="Principle Name"
-                    placeholder="Principle Name"
+                    label="Principal Name"
+                    placeholder="Principal Name"
                     v-model.trim="school.principle_name"
                     :error="errors[0]"
                   >
@@ -290,7 +290,7 @@ export default {
         this.$route.query.id
       );
       this.school.name = this.schoolDetails.name;
-      this.school.principle_name = this.schoolDetails.principal_name;
+      this.school.Principle_name = this.schoolDetails.principal_name;
       this.school.phone = this.schoolDetails.phone;
       this.school.principal_phone = this.schoolDetails.principal_phone;
       this.school.email = this.schoolDetails.email;

@@ -3,6 +3,7 @@
     <div v-if="loading || reload">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
+
     <u-card v-else>
       <table key="tableKey" class="u-data-table ">
         <colgroup>
@@ -215,6 +216,21 @@
           </tr>
         </tbody>
       </table>
+      <div class="text-center mt-5 mb-5">
+        <button
+          class="px-5 py-2 mx-3"
+          :style="{
+            backgroundColor: item.backgroundColor,
+            color: item.color,
+            borderRadius: '12px',
+          }"
+          v-for="(item, index) in colorTab"
+          :key="index"
+          @click="filterData(item.backgroundColor)"
+        >
+          {{ item.label }}
+        </button>
+      </div>
       <pagination></pagination>
     </u-card>
     <select-teacher
@@ -264,6 +280,7 @@ import { mapActions, mapMutations, mapGetters } from "vuex";
 import { ADMIN } from "@/constants/roles";
 import DeleteUserMixin from "@/mixins/delete-user.mixin";
 import Pagination from "@/components/Pagination.vue";
+
 export default {
   components: {
     UCard,
@@ -283,8 +300,10 @@ export default {
     currentSelectedStudent: null,
     studentStatus: null,
     commentProps: false,
+    load: false,
     tableKey: 0,
     ModalMessage: " Are you sure to ",
+    activeColor: 1,
     columns: [
       {
         text: "Name",
@@ -313,6 +332,38 @@ export default {
       action: "",
       studentName: "",
     },
+    colorTab: [
+      {
+        id: 1,
+        label: "All",
+        color: "black",
+        backgroundColor: "white",
+      },
+      {
+        id: 2,
+        label: "Red",
+        color: "white",
+        backgroundColor: "red",
+      },
+      {
+        id: 3,
+        label: "Yellow",
+        color: "black",
+        backgroundColor: "yellow",
+      },
+      {
+        id: 4,
+        label: "Green",
+        color: "white",
+        backgroundColor: "green",
+      },
+      {
+        id: 1,
+        label: "Gray",
+        color: "white",
+        backgroundColor: "grey",
+      },
+    ],
   }),
   computed: {
     ...mapGetters("Students", {
@@ -383,7 +434,10 @@ export default {
           await StudentsApi.comment(this.student.payloadData);
         }
       }
-      await this.fetchStudentsList(ADMIN);
+      let payload = {
+        role: ADMIN,
+      };
+      await this.fetchStudentsList(payload);
       this.loading = false;
     },
     formatDate(e) {
@@ -450,9 +504,19 @@ export default {
       this.commentProps = false;
       this.$modal.hide("comment-modal");
     },
+    async filterData(color) {
+      const payload = {
+        role: ADMIN,
+        color: color,
+      };
+      await this.fetchStudentsList(payload);
+    },
   },
   async mounted() {
-    await this.fetchStudentsList(ADMIN);
+    const payload = {
+      role: ADMIN,
+    };
+    await this.fetchStudentsList(payload);
   },
   beforeDestroy() {
     this.RESET_STUDENTS_LIST();

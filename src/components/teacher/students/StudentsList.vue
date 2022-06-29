@@ -53,8 +53,11 @@ export default {
       students: "studentsList",
     }),
   },
-  mounted() {
-    this.fetchStudents(TEACHER);
+  async mounted() {
+    let payload = {
+      role: TEACHER,
+    };
+    await this.fetchStudents(payload);
   },
 };
 </script>

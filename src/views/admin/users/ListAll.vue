@@ -42,8 +42,8 @@ import TeachersList from "@/components/admin/users/TeachersList";
 import StudentsList from "@/components/admin/users/StudentsList";
 import SchoolList from "@/components/admin/users/SchoolList";
 import UTextField from "@/components/common/UTextField";
-
-import { mapMutations } from "vuex";
+import { ADMIN } from "@/constants/roles";
+import { mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
@@ -69,17 +69,26 @@ export default {
   methods: {
     ...mapMutations("Teachers", ["FILTER_TEACHER_LIST"]),
     ...mapMutations("Students", ["FILTER_STUDENTS_LIST"]),
+    ...mapMutations("School", ["FILTER_SCHOOL_LIST"]),
+    ...mapActions("Students", ["fetchStudentsList"]),
     getItems() {
       LessonsApi.getPage((response) => {
         console.log(response);
       });
     },
-    searchFilter() {
+    async searchFilter() {
       if (this.currentTab === 0) {
         this.FILTER_TEACHER_LIST(this.searchQuery);
       }
       if (this.currentTab === 1) {
-        this.FILTER_STUDENTS_LIST(this.searchQuery);
+        let payload = {
+          role: ADMIN,
+          search: this.searchQuery,
+        };
+        await this.fetchStudentsList(payload);
+      }
+      if (this.currentTab === 2) {
+        this.FILTER_SCHOOL_LIST(this.searchQuery);
       }
     },
     handleSearch: debounce(function() {

@@ -44,12 +44,12 @@
               <div class="u-col-6 u-mb-8 create-item">
                 <ValidationProvider
                   rules="required"
-                  name="Principle Name"
+                  name="Principal Name"
                   v-slot="{ errors }"
                 >
                   <u-text-field
-                    label="Principle Name"
-                    placeholder="Principle Name"
+                    label="Principal Name"
+                    placeholder="Principal Name"
                     v-model.trim="school.principle_name"
                     :error="errors[0]"
                   >
@@ -153,7 +153,7 @@
                   </u-text-field>
                 </ValidationProvider>
               </div>
-              <div class="u-col-6 u-mb-8 create-item">
+              <!-- <div class="u-col-6 u-mb-8 create-item">
                 <label for="teacher">Select Teacher</label>
                 <multiselect
                   v-model="assigned_teacher"
@@ -166,7 +166,7 @@
                   :value="'id'"
                   :option-height="500"
                 ></multiselect>
-              </div>
+              </div> -->
               <div class="u-col-6 avatar-block">
                 <label>Avatar</label>
                 <file-upload v-model="school.avatar" accept="image/*">

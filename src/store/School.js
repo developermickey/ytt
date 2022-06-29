@@ -4,7 +4,8 @@ export default {
   namespaced: true,
   state: {
     loading: false,
-    schoolList: null,
+    schoolList: [],
+    filteredSchoolList: [],
     schoolDetails: {},
   },
   mutations: {
@@ -13,9 +14,15 @@ export default {
     },
     SET_SCHOOL_LIST(state, payload) {
       state.schoolList = payload;
+      state.filteredSchoolList = payload;
     },
     SET_SCHOOL_DETAILS(state, payload) {
       state.schoolDetails = payload;
+    },
+    FILTER_SCHOOL_LIST(state, payload) {
+      state.filteredSchoolList = state.schoolList.filter((imtem) => {
+        return imtem.name.toLowerCase().includes(payload.toLowerCase());
+      });
     },
   },
   actions: {
@@ -47,6 +54,7 @@ export default {
   getters: {
     loading: (state) => state.loading,
     schoolList: (state) => state.schoolList,
+    filteredSchoolList: (state) => state.filteredSchoolList,
     schoolDetails: (state) => state.schoolDetails,
   },
 };

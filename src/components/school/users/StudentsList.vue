@@ -409,7 +409,10 @@ export default {
       } else if (this.student.action === "delete") {
         await StudentsApi.deleteBySchool(this.student.payloadData);
       }
-      await this.fetchStudentsList(SCHOOL);
+      let payload = {
+        role: SCHOOL,
+      };
+      await this.fetchStudentsList(payload);
       this.loading = false;
     },
     formatDate(e) {
@@ -483,7 +486,10 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchStudentsList(SCHOOL);
+    let payload = {
+      role: SCHOOL,
+    };
+    await this.fetchStudentsList(payload);
   },
   beforeDestroy() {
     this.RESET_STUDENTS_LIST();

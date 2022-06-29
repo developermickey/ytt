@@ -112,7 +112,7 @@ export default {
         text: "Location",
       },
       {
-        text: "Principle Name",
+        text: "Principal Name",
       },
       {
         text: "Principal Email",
@@ -161,7 +161,7 @@ export default {
   },
   computed: {
     schoolList() {
-      return this.$store.getters["School/schoolList"];
+      return this.$store.getters["School/filteredSchoolList"];
     },
     loading() {
       return this.$store.getters["School/loading"];

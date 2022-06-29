@@ -119,7 +119,7 @@ export default {
         },
         {
           id: 6,
-          text: "Transaction",
+          text: "Paid Students",
           to: { name: "admin-transaction" },
           icon: "coin",
           active: false,
@@ -183,7 +183,10 @@ export default {
         {
           id: 2,
           text: "Settings",
-          to: { name: "school-settings" },
+          to: {
+            name: "school-settings",
+            // query: { id: this.userId },
+          },
           icon: "icon-settings",
           active: false,
         },
@@ -236,6 +239,9 @@ export default {
     ...mapGetters("Application", ["getSidebarStatus"]),
     showCoins() {
       return this.user.role_id === STUDENT;
+    },
+    userId() {
+      return this.user.id;
     },
   },
   methods: {

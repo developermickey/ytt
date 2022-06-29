@@ -53,17 +53,27 @@ export default {
     },
   },
   actions: {
-    async fetchStudentsList(context, role) {
+    async fetchStudentsList(context, payload) {
       let url = "";
       let params = {};
-      if (role === ADMIN) {
+      if (payload.role === ADMIN) {
         url = `/${ROLE_MAP[ADMIN]}/users`;
         params.role = STUDENT;
         params.perPage = 20;
-      } else if (role === TEACHER) {
+      } else if (payload.role === TEACHER) {
         url = `/${ROLE_MAP[TEACHER]}/students`;
-      } else if (role === SCHOOL) {
+      } else if (payload.role === SCHOOL) {
         url = `/school/students?role=3`;
+      }
+      if (payload.color !== undefined) {
+        if (payload.color !== "white") {
+          params.label = payload.color;
+        }
+      }
+
+      if (payload.search) {
+        console.log(payload.search);
+        params.search = payload.search;
       }
       context.commit("SET_LOADING", true);
 
@@ -72,7 +82,7 @@ export default {
         .get(url, { params })
         .then((response) => {
           let res = "";
-          if (role === ADMIN) {
+          if (payload.role === ADMIN) {
             res = response.data.data;
           } else {
             res = response.data;
@@ -151,7 +161,7 @@ export default {
             }
           }
           context.commit("SET_STUDENTS_LIST", mergeStudents);
-          if (role === ADMIN) {
+          if (payload.role === ADMIN) {
             context.commit("PAGINATION", response.data.meta.links);
             context.commit(
               "SET_PAGINATION_ACTIVE",
