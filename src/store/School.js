@@ -41,7 +41,7 @@ export default {
     async getSchoolInformationById(context, payload) {
       context.commit("SET_LOADING", true);
       await axios
-        .get(`/admin/school/${payload}`)
+        .get(`/school/${payload}`)
         .then((response) => {
           context.commit("SET_SCHOOL_DETAILS", response.data);
           context.commit("SET_LOADING", false);

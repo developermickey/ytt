@@ -64,7 +64,7 @@
                   <u-text-field
                     label="Principal Name"
                     placeholder="Principal Name"
-                    v-model.trim="school.principle_name"
+                    v-model.trim="school.principal_name"
                     :error="errors[0]"
                   >
                   </u-text-field>
@@ -133,7 +133,7 @@
               </div>
               <div class="u-col-6 u-mb-8 create-item">
                 <ValidationProvider
-                  :rules="$route.query.id ? '' : 'min:6|max:20|required'"
+                  rules=""
                   name="Password"
                   v-slot="{ errors }"
                 >
@@ -149,11 +149,7 @@
               </div>
               <div class="u-col-6 u-mb-8 create-item">
                 <ValidationProvider
-                  :rules="
-                    $route.query.id
-                      ? ''
-                      : 'min:6|max:20|required|confirmed:Password'
-                  "
+                  rules=""
                   name="Repeat password"
                   v-slot="{ errors }"
                 >
@@ -228,7 +224,7 @@ export default {
   data: () => ({
     school: {
       name: "",
-      principle_name: "",
+      principal_name: "",
       phone: "",
       principal_phone: "",
       email: "",
@@ -236,6 +232,7 @@ export default {
       password: "",
       password_confirmation: "",
       avatar: null,
+      id: JSON.parse(localStorage.getItem("user")).id,
     },
     assigned_teacher: [],
     isSchoolCreatePending: false,
@@ -243,7 +240,6 @@ export default {
   }),
   methods: {
     async submit() {
-      this.password = this.password === "" ? null : this.password;
       const formData = new FormData();
       for (let field in this.school) {
         if (this.school[field]) {
@@ -252,45 +248,34 @@ export default {
       }
       let self = this;
       let error = false;
-
-      const createUrl = "/admin/school";
-      const updateUrl = `/admin/school/${this.$route.query.id}`;
+      let user = JSON.parse(localStorage.getItem("user"));
+      const updateUrl = `/school/${user.id}/update`;
       this.isSchoolCreatePending = true;
       await axios
-        .post(this.$route.query.id ? updateUrl : createUrl, formData)
-        .then(() => {})
-        .catch(() => {
-          error = true;
+        .post(updateUrl, formData)
+        .then(() => {
           self.$notify({
-            title: "Principal Email should be unique",
-            text: "Please try again",
-            type: "error",
+            title: `${
+              self.$route.query.id
+                ? "School updated Successfully"
+                : "School created Successfully"
+            }`,
+            type: "success",
           });
+          this.isSchoolCreatePending = false;
+        })
+        .catch(() => {
+          console.log(error);
+          this.isSchoolCreatePending = false;
         });
-      if (!error) {
-        self.$notify({
-          title: `${
-            self.$route.query.id
-              ? "School updated Successfully"
-              : "School created Successfully"
-          }`,
-          type: "success",
-        });
-        setTimeout(() => {
-          self.$router.push("/admin/users/all");
-        }, "1000");
-      }
-      this.isSchoolCreatePending = false;
     },
   },
   async mounted() {
-    if (this.$route.query.id) {
-      await this.$store.dispatch(
-        "School/getSchoolInformationById",
-        this.$route.query.id
-      );
+    if (localStorage.getItem("user")) {
+      let user = JSON.parse(localStorage.getItem("user"));
+      await this.$store.dispatch("School/getSchoolInformationById", user.id);
       this.school.name = this.schoolDetails.name;
-      this.school.Principle_name = this.schoolDetails.principal_name;
+      this.school.principal_name = this.schoolDetails.principal_name;
       this.school.phone = this.schoolDetails.phone;
       this.school.principal_phone = this.schoolDetails.principal_phone;
       this.school.email = this.schoolDetails.email;

@@ -7,6 +7,7 @@ import coins from "./coins";
 import products from "./products";
 import order from "./order";
 import Transaction from "@/views/admin/Transaction";
+import AudioFiles from "@/views/admin/AudioFiles";
 // import school from "./school";
 
 import { ADMIN } from "@/constants/roles";
@@ -31,6 +32,11 @@ const routes = {
       path: "transaction",
       component: Transaction,
       name: "admin-transaction",
+    },
+    {
+      path: "audio",
+      component: AudioFiles,
+      name: "admin-audio",
     },
   ],
 };

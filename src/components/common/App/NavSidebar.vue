@@ -125,6 +125,13 @@ export default {
           active: false,
           pngIcon: true,
         },
+        {
+          id: 7,
+          text: "Student Recording",
+          to: { name: "admin-audio" },
+          icon: "icon-file",
+          active: false,
+        },
       ],
       [TEACHER]: [
         {

@@ -26,6 +26,12 @@
 
 <script>
 export default {
+  props: {
+    audio: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       // paginationLinks: []
@@ -41,7 +47,11 @@ export default {
   },
   methods: {
     setPagination(link) {
-      this.$store.dispatch("Students/setPagination", link);
+      if (this.audio) {
+        this.$store.dispatch("Students/setPaginationAudio", link);
+      } else {
+        this.$store.dispatch("Students/setPagination", link);
+      }
     },
   },
 };

@@ -11,6 +11,7 @@ export default {
     filteredStudentsList: [],
     paginationLinks: [],
     activeLink: 1,
+    audioList: [],
   },
   mutations: {
     SET_LOADING(state, payload) {
@@ -19,6 +20,9 @@ export default {
     SET_STUDENTS_LIST(state, payload) {
       state.studentsList = payload;
       state.filteredStudentsList = payload;
+    },
+    SET_AUDIO_LIST(state, payload) {
+      state.audioList = payload;
     },
     SET_STUDENT(state, payload) {
       state.student = payload;
@@ -175,6 +179,29 @@ export default {
           context.commit("SET_LOADING", false);
         });
     },
+    async fetchAudioFiles(context) {
+      let url = "/admin/students/recordings";
+      let params = {};
+      params.perPage = 20;
+      context.commit("SET_LOADING", true);
+      await axios
+        // .get("/admin/getStudentTest")
+        .get(url, { params })
+        .then((response) => {
+          let res = response.data.result.data;
+          context.commit("SET_AUDIO_LIST", res);
+          context.commit("PAGINATION", response.data.result.links);
+          context.commit(
+            "SET_PAGINATION_ACTIVE",
+            response.data.result.links[1].url
+          );
+          context.commit("SET_LOADING", false);
+        })
+        .catch((err) => {
+          ErrorHelper.getErrorWithMessage(err);
+          context.commit("SET_LOADING", false);
+        });
+    },
 
     fetchStudent({ commit }, { id, role }) {
       commit("SET_LOADING", true);
@@ -283,6 +310,26 @@ export default {
           });
       }
     },
+    async setPaginationAudio(context, payload) {
+      if (payload.url !== null) {
+        context.commit("SET_LOADING", true);
+        let params = { perPage: 20 };
+
+        await axios
+          .get(payload.url, { params })
+          .then((response) => {
+            let res = response.data.result.data;
+            context.commit("SET_AUDIO_LIST", res);
+            context.commit("PAGINATION", response.data.result.links);
+            context.commit("SET_PAGINATION_ACTIVE", payload.url);
+            context.commit("SET_LOADING", false);
+          })
+          .catch((err) => {
+            ErrorHelper.getErrorWithMessage(err);
+            context.commit("SET_LOADING", false);
+          });
+      }
+    },
   },
   getters: {
     loading: (state) => state.loading,
@@ -291,5 +338,6 @@ export default {
     student: (state) => state.student,
     pagination: (state) => state.paginationLinks,
     activeLink: (state) => state.activeLink,
+    audioList: (state) => state.audioList,
   },
 };
