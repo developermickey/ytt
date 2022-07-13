@@ -197,6 +197,13 @@ export default {
           icon: "icon-settings",
           active: false,
         },
+        {
+          id: 3,
+          text: "Student Recording",
+          to: { name: "school-audio" },
+          icon: "icon-file",
+          active: false,
+        },
         // {
         //   id: 2,
         //   text: "Users",

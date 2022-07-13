@@ -155,7 +155,7 @@ export default {
       return moment(date, "YYYY-MM-DD HH:mm:ss").format("DD-MM-YYYY");
     },
     async getOrdersList() {
-      await this.$store.dispatch("Students/fetchAudioFiles", "admin");
+      await this.$store.dispatch("Students/fetchAudioFiles", "school");
       //   .then((e) => {
       //     self.orderList = e.data.result;
       //     self.loading = false;

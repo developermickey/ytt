@@ -179,8 +179,13 @@ export default {
           context.commit("SET_LOADING", false);
         });
     },
-    async fetchAudioFiles(context) {
-      let url = "/admin/students/recordings";
+    async fetchAudioFiles(context, role) {
+      let url = "";
+      if (role === "admin") {
+        url = `/admin/students/recordings`;
+      } else if (role === "school") {
+        url = `/school/recordings`;
+      }
       let params = {};
       params.perPage = 20;
       context.commit("SET_LOADING", true);

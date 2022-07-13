@@ -3,6 +3,7 @@ import StudentSingleCreate from "@/components/school/users/StudentSingleCreate";
 import EditSingle from "@/views/school/users/EditSingle";
 import Payment from "@/views/school/Payment";
 import user from "./user";
+import AudioFiles from "@/views/school/AudioFiles";
 // import students from "./students";
 import settings from "./settings";
 
@@ -34,6 +35,11 @@ const routes = {
       path: "payment/:studentId",
       component: Payment,
       name: "school-payment",
+    },
+    {
+      path: "audio",
+      component: AudioFiles,
+      name: "school-audio",
     },
   ],
 };

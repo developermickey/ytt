@@ -149,6 +149,7 @@
 import CreateUserMixin from "@/mixins/create-user.mixin";
 import { STUDENT } from "@/constants/roles";
 import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.min.css";
 
 export default {
   mixins: [CreateUserMixin],

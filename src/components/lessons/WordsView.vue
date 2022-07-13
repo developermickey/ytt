@@ -17,7 +17,7 @@
 import EditWordsSlider from "@/components/lessons/EditWordsSlider";
 import LessonWordsList from "@/components/lessons/LessonWordsList";
 
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -35,30 +35,37 @@ export default {
     },
     status: {
       type: String,
-      default: 'known',
-    }
+      default: "known",
+    },
   },
   computed: {
-    ...mapGetters('Words', [
-      'words', 'knownWords', 'unknownWords', 'allWords', 'masteredWords'
+    ...mapGetters("Words", [
+      "words",
+      "knownWords",
+      "unknownWords",
+      "allWords",
+      "masteredWords",
     ]),
-    displayWords(){
+    displayWords() {
       switch (this.status) {
-        case 'known':
+        case "known":
           return this.knownWords;
-        case 'unknown':
+        case "unknown":
           return this.unknownWords;
-        case 'mastered':
+        case "mastered":
           return this.masteredWords;
-      
-        default: return this.knownWords;
-       }
+        case "allWords":
+          return this.allWords;
+
+        default:
+          return this.knownWords;
+      }
     },
-    filteredWords(){
+    filteredWords() {
       //gets list of all words
       //with 'disabled' property dependent on displayKnown prop
 
-      return this.allWords.map(item => {
+      return this.allWords.map((item) => {
         return {
           id: item.id,
           image_default: item.image_default,
@@ -66,13 +73,11 @@ export default {
           translation_default: item.translation_default,
           status: item.status,
           disabled: item.status !== this.status,
-        }
-      })
-    }
-  }
-}
+        };
+      });
+    },
+  },
+};
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>
