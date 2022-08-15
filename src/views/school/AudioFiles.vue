@@ -5,7 +5,7 @@
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
     <u-card v-if="!loading" elevation="3">
-      <table class="u-data-table ">
+      <table class="u-data-table">
         <thead>
           <tr>
             <template v-for="(column, index) in columns">
@@ -18,7 +18,7 @@
         <tbody v-if="orderList && orderList.length">
           <tr v-for="item in orderList" class="text-center" :key="item.id">
             <td class="">{{ item.student_name }}</td>
-            <td class="">{{ item.school_name }}</td>
+
             <td class="">{{ item.lesson_title }}</td>
             <td class="">{{ item.known_words }}</td>
             <td class="">
@@ -87,9 +87,7 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td class="u-text-center" colspan="4">
-              No data available
-            </td>
+            <td class="u-text-center" colspan="4">No data available</td>
           </tr>
         </tbody>
       </table>
@@ -131,9 +129,7 @@ export default {
       {
         text: "Student Name",
       },
-      {
-        text: "School Name",
-      },
+
       {
         text: "Lesson",
       },

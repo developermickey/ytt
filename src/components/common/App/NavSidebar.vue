@@ -132,6 +132,20 @@ export default {
           icon: "icon-file",
           active: false,
         },
+        {
+          id: 8,
+          text: "Custom Payment",
+          to: { name: "admin-paymentConfiguration" },
+          icon: "icon-file",
+          active: false,
+        },
+        {
+          id: 9,
+          text: "Coupon List",
+          to: { name: "admin-coupon-list" },
+          icon: "icon-file",
+          active: false,
+        },
       ],
       [TEACHER]: [
         {
@@ -203,6 +217,21 @@ export default {
           to: { name: "school-audio" },
           icon: "icon-file",
           active: false,
+        },
+        {
+          id: 4,
+          text: "Store",
+          to: { name: "school-product-list" },
+          icon: "icon-store",
+          active: false,
+        },
+        {
+          id: 5,
+          text: "Orders",
+          to: { name: "school-order-list" },
+          icon: "list-active",
+          active: false,
+          pngIcon: true,
         },
         // {
         //   id: 2,

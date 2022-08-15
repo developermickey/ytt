@@ -182,6 +182,16 @@
                   </template>
                 </file-upload>
               </div>
+              <div class="u-col-6 u-mb-8 create-item">
+                <label for="teacher">Store</label>
+
+                <b-form-radio-group
+                  v-model="store"
+                  :options="storeList"
+                  value-field="item"
+                  text-field="name"
+                ></b-form-radio-group>
+              </div>
             </div>
           </div>
           <div class="u-flex is-justify-center mt-5">
@@ -210,9 +220,11 @@ import { extend } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
 import { ADMIN } from "@/constants/roles";
 import { mapActions, mapGetters } from "vuex";
-import Multiselect from "vue-multiselect";
+// import Multiselect from "vue-multiselect";
 import Loader from "@/components/Loader";
 import axios from "axios";
+import { BFormRadioGroup } from "bootstrap-vue";
+
 extend("required", {
   ...required,
   message: `{_field_} is required`,
@@ -221,7 +233,7 @@ export default {
   components: {
     UTextField,
     FileUpload,
-    Multiselect,
+    BFormRadioGroup,
     Loader,
   },
   data: () => ({
@@ -237,31 +249,39 @@ export default {
       assigned_teachers_id: [],
       avatar: null,
     },
+    store: 1,
     assigned_teacher: [],
     isSchoolCreatePending: false,
+    storeList: [
+      { item: 1, name: "Enable" },
+      { item: 0, name: "Disable" },
+    ],
   }),
   methods: {
     ...mapActions("Teachers", ["fetchTeachersList"]),
     async submit() {
-      this.school.assigned_teachers_id = this.assigned_teacher.map((x) => {
-        return x.id;
-      });
-      this.school.assigned_teachers_id =
-        this.school.assigned_teachers_id.length > 0
-          ? this.school.assigned_teachers_id
-          : null;
+      // this.school.assigned_teachers_id = this.assigned_teacher.map((x) => {
+      //   return x.id;
+      // });
+      // this.school.assigned_teachers_id =
+      //   this.school.assigned_teachers_id.length > 0
+      //     ? this.school.assigned_teachers_id
+      //     : null;
       this.password = this.password === "" ? null : this.password;
       const formData = new FormData();
+      console.log(this.school);
       for (let field in this.school) {
         if (this.school[field]) {
           formData.append(field, this.school[field]);
         }
       }
+
+      formData.append("store", parseInt(this.store));
       let self = this;
       let error = false;
 
       const createUrl = "/admin/school";
-      const updateUrl = `/admin/school/${this.$route.query.id}`;
+      const updateUrl = `/admin/updateSchool/${this.$route.query.id}`;
       this.isSchoolCreatePending = true;
       await axios
         .post(this.$route.query.id ? updateUrl : createUrl, formData)
@@ -283,19 +303,20 @@ export default {
           }`,
           type: "success",
         });
-        setTimeout(() => {
-          self.$router.push("/admin/users/all");
-        }, "1000");
+        // setTimeout(() => {
+        //   self.$router.push("/admin/users/all");
+        // }, "1000");
       }
       this.isSchoolCreatePending = false;
     },
   },
   async mounted() {
     if (this.$route.query.id) {
-      await this.$store.dispatch(
-        "School/getSchoolInformationById",
-        this.$route.query.id
-      );
+      const payload = {
+        canAccess: "admin",
+        id: this.$route.query.id,
+      };
+      await this.$store.dispatch("School/getSchoolInformationById", payload);
       this.school.name = this.schoolDetails.name;
       this.school.principle_name = this.schoolDetails.principal_name;
       this.school.phone = this.schoolDetails.phone;
@@ -303,6 +324,7 @@ export default {
       this.school.email = this.schoolDetails.email;
       this.school.city = this.schoolDetails.city;
       this.assigned_teacher = this.schoolDetails.assigned_teacher;
+      this.store = parseInt(this.schoolDetails.store);
       // this.school.avatar = this.schoolDetails.avatar;
       // self.name =
     }

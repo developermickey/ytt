@@ -70,8 +70,8 @@
                       title="Delete Order"
                     >
                     </UIconBtn>
-                  </b-dropdown-item> -->
-                  <b-dropdown-item>
+                  </b-dropdown-item>
+                  <b-dropdown-item> -->
                     <UIconBtn
                       class="u-mx-1 qa-delete-teacher-btn"
                       icon="icon-pencil"
@@ -157,32 +157,36 @@ export default {
 
   methods: {
     viewOrder(item) {
-      this.$router.push(`/admin/order/details/${item.order_id}`);
+      this.$router.push(`/school/order/details/${item.order_id}`);
     },
     async getOrdersList(status) {
       let self = this;
       self.loading = true;
-      await OrderApi.getOrderList(status).then((e) => {
-        self.orderList = [];
-        let reverse = e.data.reverse();
-        reverse.forEach((element) => {
-          self.orderList.push({
-            order_date: moment(element.created_at, "YYYY-MM-DD").format(
-              "MM-DD-YYYY"
-            ),
-            users: element.users,
-            products: element.products,
-            status:
-              element.status === null
-                ? "Processing"
-                : element.status === "processing"
-                ? "Processing"
-                : "Fulfilled",
-            product_amount: element.product_amount,
-            order_id: element.order_id,
+      await OrderApi.getOrderListSchool(status)
+        .then((e) => {
+          self.orderList = [];
+          let reverse = e.data.reverse();
+          reverse.forEach((element) => {
+            self.orderList.push({
+              order_date: moment(element.created_at, "YYYY-MM-DD").format(
+                "MM-DD-YYYY"
+              ),
+              users: element.users,
+              products: element.products,
+              status:
+                element.status === null
+                  ? "Processing"
+                  : element.status === "processing"
+                  ? "Processing"
+                  : "Fulfilled",
+              product_amount: element.product_amount,
+              order_id: element.order_id,
+            });
           });
+        })
+        .catch(() => {
+          self.loading = false;
         });
-      });
       self.loading = false;
     },
     openModal(item) {
@@ -193,7 +197,7 @@ export default {
     async confirmModal() {
       this.$modal.hide("comment-modal");
       this.loading = true;
-      await OrderApi.deleteOrder(this.itemForDelete.order_id);
+      await OrderApi.deleteOrderSchool(this.itemForDelete.order_id);
       await this.getOrdersList(this.orderStatus);
       this.loading = false;
     },

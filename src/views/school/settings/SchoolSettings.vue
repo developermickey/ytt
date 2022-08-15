@@ -178,6 +178,16 @@
                   </template>
                 </file-upload>
               </div>
+              <div class="u-col-6 u-mb-8 create-item">
+                <label for="teacher">Store</label>
+
+                <b-form-radio-group
+                  v-model="store"
+                  :options="storeList"
+                  value-field="item"
+                  text-field="name"
+                ></b-form-radio-group>
+              </div>
             </div>
           </div>
           <div class="u-flex is-justify-center mt-5">
@@ -209,6 +219,7 @@ import { mapGetters } from "vuex";
 // import Multiselect from "vue-multiselect";
 import Loader from "@/components/Loader";
 import axios from "axios";
+import { BFormRadioGroup } from "bootstrap-vue";
 extend("required", {
   ...required,
   message: `{_field_} is required`,
@@ -220,6 +231,7 @@ export default {
     // Multiselect,
     Loader,
     UCard,
+    BFormRadioGroup,
   },
   data: () => ({
     school: {
@@ -237,6 +249,11 @@ export default {
     assigned_teacher: [],
     isSchoolCreatePending: false,
     loading: false,
+    store: 1,
+    storeList: [
+      { item: 1, name: "Enable" },
+      { item: 0, name: "Disable" },
+    ],
   }),
   methods: {
     async submit() {
@@ -246,6 +263,7 @@ export default {
           formData.append(field, this.school[field]);
         }
       }
+      formData.append("store", parseInt(this.store));
       let self = this;
       let error = false;
       let user = JSON.parse(localStorage.getItem("user"));
@@ -255,11 +273,7 @@ export default {
         .post(updateUrl, formData)
         .then(() => {
           self.$notify({
-            title: `${
-              self.$route.query.id
-                ? "School updated Successfully"
-                : "School created Successfully"
-            }`,
+            title: `School updated Successfully`,
             type: "success",
           });
           this.isSchoolCreatePending = false;
@@ -273,7 +287,11 @@ export default {
   async mounted() {
     if (localStorage.getItem("user")) {
       let user = JSON.parse(localStorage.getItem("user"));
-      await this.$store.dispatch("School/getSchoolInformationById", user.id);
+      const payload = {
+        canAccess: "school",
+        id: user.id,
+      };
+      await this.$store.dispatch("School/getSchoolInformationById", payload);
       this.school.name = this.schoolDetails.name;
       this.school.principal_name = this.schoolDetails.principal_name;
       this.school.phone = this.schoolDetails.phone;
@@ -281,6 +299,7 @@ export default {
       this.school.email = this.schoolDetails.email;
       this.school.city = this.schoolDetails.city;
       this.assigned_teacher = this.schoolDetails.assigned_teacher;
+      this.store = parseInt(this.schoolDetails.store);
       // this.school.avatar = this.schoolDetails.avatar;
       // self.name =
     }

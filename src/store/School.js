@@ -40,8 +40,12 @@ export default {
     },
     async getSchoolInformationById(context, payload) {
       context.commit("SET_LOADING", true);
+      const url =
+        payload.canAccess === "admin"
+          ? `/admin/getSchool/${payload.id}`
+          : `/school/${payload.id}`;
       await axios
-        .get(`/school/${payload}`)
+        .get(url)
         .then((response) => {
           context.commit("SET_SCHOOL_DETAILS", response.data);
           context.commit("SET_LOADING", false);

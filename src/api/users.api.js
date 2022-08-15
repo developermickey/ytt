@@ -53,6 +53,7 @@ export default {
   },
 
   payStudent(payload) {
+    console.log(payload);
     return axios.post(
       `/${payload.payBy}/students/${payload.studentId}/payment`,
       payload.payload

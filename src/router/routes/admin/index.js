@@ -8,10 +8,14 @@ import products from "./products";
 import order from "./order";
 import Transaction from "@/views/admin/Transaction";
 import AudioFiles from "@/views/admin/AudioFiles";
+import PaymentConfiguration from "@/views/admin/PaymentConfiguration";
 // import school from "./school";
 
 import { ADMIN } from "@/constants/roles";
 import routesExtendMeta from "@/router/routesExtendMeta";
+
+import CouponList from "@/views/admin/coupon/CouponList";
+import CouponCreate from "@/views/admin/coupon/CouponCreate";
 
 const routes = {
   path: "/admin",
@@ -37,6 +41,21 @@ const routes = {
       path: "audio",
       component: AudioFiles,
       name: "admin-audio",
+    },
+    {
+      path: "paymentConfiguration",
+      component: PaymentConfiguration,
+      name: "admin-paymentConfiguration",
+    },
+    {
+      path: "coupon-list",
+      component: CouponList,
+      name: "admin-coupon-list",
+    },
+    {
+      path: "coupon-create",
+      component: CouponCreate,
+      name: "admin-coupon-create",
     },
   ],
 };

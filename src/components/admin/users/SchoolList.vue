@@ -4,7 +4,7 @@
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
     <u-card elevation="3">
-      <table v-if="!loading" class="u-data-table ">
+      <table v-if="!loading" class="u-data-table">
         <thead>
           <tr>
             <template v-for="(column, index) in columns">
@@ -57,17 +57,20 @@
                     </UIconBtn>
                   </b-dropdown-item>
                   <b-dropdown-item>
-                    <UIconBtn
-                      class="u-mx-1 qa-delete-teacher-btn"
-                      icon="icon-pencil"
-                      icon-color="grey"
-                      icon-hover-color="blue"
-                      bg-hover-color="white"
-                      hoverable
-                      @click.native="viewSchool(item)"
-                      title="Edit School"
+                    <router-link
+                      :to="'/admin/users/create-school?id=' + item.id"
                     >
-                    </UIconBtn>
+                      <UIconBtn
+                        class="u-mx-1 qa-delete-teacher-btn"
+                        icon="icon-pencil"
+                        icon-color="grey"
+                        icon-hover-color="blue"
+                        bg-hover-color="white"
+                        hoverable
+                        title="Edit School"
+                      >
+                      </UIconBtn>
+                    </router-link>
                   </b-dropdown-item>
                 </b-dropdown>
               </div>
@@ -76,9 +79,7 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td class="u-text-center" colspan="4">
-              No data available
-            </td>
+            <td class="u-text-center" colspan="4">No data available</td>
           </tr>
         </tbody>
       </table>
@@ -131,7 +132,7 @@ export default {
     ...mapActions("Auth", ["loginAsUser"]),
     viewSchool(item) {
       this.$router.push({
-        name: "admin-school-create",
+        to: "/admin/users/create-school",
         query: { id: item.id },
       });
       // this.$router.push({ to: `/create-school`, query: item.id });

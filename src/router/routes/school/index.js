@@ -6,10 +6,11 @@ import user from "./user";
 import AudioFiles from "@/views/school/AudioFiles";
 // import students from "./students";
 import settings from "./settings";
-
+import order from "./order";
 import { SCHOOL } from "@/constants/roles";
 import routesExtendMeta from "@/router/routesExtendMeta";
-
+import ProductList from "@/views/school/products/ProductsList";
+import ProductCreate from "@/views/school/products/ProductCreate";
 const routes = {
   path: "/school",
   component: School,
@@ -21,6 +22,7 @@ const routes = {
   children: [
     user,
     settings,
+    order,
     {
       path: "create-student",
       component: StudentSingleCreate,
@@ -40,6 +42,16 @@ const routes = {
       path: "audio",
       component: AudioFiles,
       name: "school-audio",
+    },
+    {
+      path: "store/list",
+      component: ProductList,
+      name: "school-product-list",
+    },
+    {
+      path: "store/create",
+      component: ProductCreate,
+      name: "school-product-create",
     },
   ],
 };

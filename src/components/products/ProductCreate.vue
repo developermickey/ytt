@@ -1,6 +1,5 @@
 <template>
   <div class="user-settings">
-
     <ValidationObserver
       tag="div"
       class="user-settings__form"
@@ -18,26 +17,14 @@
         </ValidationProvider>
       </div>
       <div class="user-settings__form-col">
-        <u-text-field
-          label="Amount"
-          placeholder="0"
-          v-model="amount"
-        >
+        <u-text-field label="Amount" placeholder="0" v-model="amount">
         </u-text-field>
       </div>
       <div class="user-settings__form-col">
         <label class="user-settings__avatar-label">Image</label>
-        <file-upload
-          v-model="image"
-          accept="image/*"
-        >
+        <file-upload v-model="image" accept="image/*">
           <template v-slot:default-label>
-            <UBtn
-              size="large"
-              color="primary"
-              tag="div"
-              class="add-photo"
-            >
+            <UBtn size="large" color="primary" tag="div" class="add-photo">
               Add photo
             </UBtn>
           </template>
@@ -55,21 +42,25 @@
           Save
         </UBtn>
       </div>
-
-
     </ValidationObserver>
   </div>
 </template>
 
 <script>
-import UTextField from '@/components/common/UTextField';
-import FileUpload from '@/components/common/FileUpload/FileUpload';
-import {mapGetters, mapActions} from "vuex";
+import UTextField from "@/components/common/UTextField";
+import FileUpload from "@/components/common/FileUpload/FileUpload";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
+  props: {
+    isSchool: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data: () => ({
-    name: '',
-    amount: '',
+    name: "",
+    amount: "",
     image: null,
   }),
   components: {
@@ -77,49 +68,46 @@ export default {
     FileUpload,
   },
   computed: {
-    ...mapGetters('Products', ['loading']),
-    submitId(){
-      return this.$route.name + '_submit';
-    }
+    ...mapGetters("Products", ["loading"]),
+    submitId() {
+      return this.$route.name + "_submit";
+    },
   },
   methods: {
-    ...mapActions('Products', ['createProduct']),
+    ...mapActions("Products", ["createProduct"]),
 
-    collectPostData(){
+    collectPostData() {
       let formData = {
         name: this.name,
-        amount: this.amount
+        amount: this.amount,
+        isSchool: this.isSchool,
       };
 
-      if(this.image)
-        formData.image = this.image;
+      if (this.image) formData.image = this.image;
 
       return formData;
     },
-    submit(){
+    submit() {
       let data = this.collectPostData();
 
       this.createProduct(data)
         .then(() => {
           this.$notify({
-            title: 'Product successfully created!',
-            type: 'success'
+            title: "Product successfully created!",
+            type: "success",
           });
-          this.$router.push({ name: 'product-list' })
+          this.$router.push({ name: "product-list" });
         })
         .catch(({ message }) => {
           this.$notify({
-            title: 'Product create error',
+            title: "Product create error",
             text: message,
-            type: 'error'
+            type: "error",
           });
         });
     },
-
   },
-}
+};
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

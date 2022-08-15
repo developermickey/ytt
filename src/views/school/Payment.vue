@@ -3,8 +3,19 @@
     <Loader class="loader" :show="loading" :fixedPosition="false" />
     <div v-if="!loading">
       <h1 class="mb-4">Payment</h1>
-      <div v-if="canPay" class="u-card elevation-3 p-4">
-        <h1>Pay $99.0 for {{ user.name }}</h1>
+      <div v-if="canPay" class="u-card elevation-3 p-4 d-flex flex-wrap">
+        <h1>Pay ${{ payAmount }} for {{ user.name }}</h1>
+        <UBtn
+          id="create_lesson_link"
+          class="add-button-admin ml-auto"
+          size="x-large"
+          color="blue"
+          :width="250"
+          @click="openModal"
+          v-if="hasCopun"
+        >
+          Apply Coupon
+        </UBtn>
       </div>
       <div v-else class="u-card elevation-3 p-4">
         <h1>For {{ user.name }} , payment is already Done</h1>
@@ -16,9 +27,48 @@
         </div>
       </div>
     </div>
-    <div v-if="canPay" class="u-card elevation-3 mt-4  py-5">
-      <div class="mx-auto" style="max-width:400px" ref="paypal"></div>
+    <div v-if="canPay && payAmount !== 0" class="u-card elevation-3 mt-4 py-5">
+      <div class="mx-auto" style="max-width: 400px" ref="paypal"></div>
     </div>
+    <div
+      v-if="payAmount === 0 && !loading"
+      class="u-card elevation-3 mt-4 py-5 text-center"
+    >
+      <UBtn
+        id="create_lesson_link"
+        class="add-button-admin ml-auto"
+        size="x-large"
+        color="blue"
+        :width="250"
+        @click="freePay"
+      >
+        Pay
+      </UBtn>
+    </div>
+    <comment-modal
+      title="Enter Coupon Name"
+      @save="confirmModal"
+      @closeModal="cancelModal"
+    >
+      <template v-slot:comment>
+        <div class="u-row create-wrap">
+          <div class="u-col-12 u-mb-8 create-item">
+            <u-text-field
+              label="Coupon name"
+              placeholder="Coupon name"
+              v-model="couponName"
+            >
+            </u-text-field>
+            <p v-if="couponError" class="mt-2" style="color: red">
+              Coupon Name is required
+            </p>
+            <p v-if="invalidCoupon" class="mt-2" style="color: red">
+              Coupon is not valid
+            </p>
+          </div>
+        </div>
+      </template>
+    </comment-modal>
   </div>
 </template>
 
@@ -28,14 +78,21 @@ import Loader from "@/components/Loader";
 import UBtn from "@/components/common/UBtn.vue";
 import user from "@/api/users.api.js";
 import moment from "moment";
+import axios from "axios";
+import CommentModal from "@/components/modals/CommentModal.vue";
+import UTextField from "@/components/common/UTextField";
+import uuid4 from "uuid4";
+
 export default {
   async mounted() {
+    let self = this;
+
     if (this.$route.params.studentId) {
       const script = document.createElement("script");
       script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.VUE_APP_PAYPAL_CLIENT_ID}`;
       script.addEventListener("load", this.setLoaded);
       document.body.appendChild(script);
-      this.fetchUser({
+      await this.fetchUser({
         id: this.$route.params.studentId,
         type: "school",
       }).then(() => {
@@ -48,6 +105,29 @@ export default {
         ).format("YYYY-MM-DD");
         canPay = currentDate.isSameOrAfter(exDate, "days");
         if (this.user.license_expire_at === null || canPay) {
+          axios.get("/school/paymentConfiguration").then((res) => {
+            self.payAmount = parseInt(res.data.payamount);
+          });
+
+          axios
+            .get(`/school/validateCoupun/${this.user.school_id}`)
+            .then((res) => {
+              if (res.data.response.hasCoupun === "true") {
+                self.numberOfCopuns = parseInt(
+                  res.data.response.numberOfCopuns
+                );
+                self.usedCopuns = parseInt(
+                  res.data.response.numberOfUsedCopuns
+                );
+                self.discount = parseInt(res.data.response.discountAmmount);
+
+                if (self.usedCopuns < self.numberOfCopuns) {
+                  self.hasCopun = true;
+                  self.couponNameFromServer = res.data.response.copunName;
+                }
+              }
+            });
+
           this.canPay = true;
           this.loading = false;
         } else {
@@ -60,11 +140,23 @@ export default {
   components: {
     Loader,
     UBtn,
+    CommentModal,
+    UTextField,
   },
   data() {
     return {
       loading: true,
       canPay: true,
+      payAmount: "",
+      couponName: "",
+      couponError: false,
+      hasCopun: false,
+      couponNameFromServer: "",
+      numberOfCopuns: "",
+      usedCopuns: "",
+      invalidCoupon: false,
+      discount: "",
+      appliedCopun: false,
     };
   },
   methods: {
@@ -82,7 +174,7 @@ export default {
                   description: `Pay for ${this.user.name}`,
                   amount: {
                     currency_code: "USD",
-                    value: 99.0,
+                    value: this.payAmount,
                   },
                 },
               ],
@@ -90,12 +182,91 @@ export default {
           },
           onApprove: async (data, actions) => {
             const order = await actions.order.capture();
+            // console.log(order);
             const payload = {
               payBy: "school",
               studentId: this.$route.params.studentId,
               payload: { ...order, studentId: this.$route.params.studentId },
             };
             await user.payStudent(payload).then(() => {
+              if (self.appliedCopun) {
+                axios.put(`/school/updateNumberOfCopuns/1`).then(() => {
+                  self.$notify({
+                    title: "Payment Successful",
+                    type: "success",
+                  });
+                  setTimeout(() => {
+                    self.$router.push({ name: "school-users-all" });
+                  }, "1000");
+                });
+              } else {
+                self.$notify({
+                  title: "Payment Successful",
+                  type: "success",
+                });
+                setTimeout(() => {
+                  self.$router.push({ name: "school-users-all" });
+                }, "1000");
+              }
+            });
+          },
+          onError: (err) => {
+            console.log(err);
+            // location.reload();
+          },
+        })
+        .render(this.$refs.paypal);
+    },
+    openModal() {
+      this.$modal.show("comment-modal");
+    },
+    async confirmModal() {
+      if (this.couponName === "") {
+        this.couponError = true;
+      } else {
+        this.couponError = false;
+        if (this.couponNameFromServer !== this.couponName) {
+          this.invalidCoupon = true;
+        } else {
+          this.payAmount = this.payAmount - this.discount;
+
+          this.appliedCopun = true;
+          this.hasCopun = false;
+          this.cancelModal();
+        }
+      }
+    },
+    cancelModal() {
+      this.$modal.hide("comment-modal");
+      this.couponName = "";
+      this.couponError = false;
+      this.invalidCoupon = false;
+    },
+    async freePay() {
+      if (this.payAmount === 0) {
+        this.loading = true;
+
+        const order = {
+          id: uuid4(),
+          purchase_units: [
+            {
+              amount: {
+                value: 0,
+              },
+            },
+          ],
+          status: "COMPLETED",
+        };
+        const payPayload = {
+          payBy: "school",
+          studentId: this.$route.params.studentId,
+          payload: { ...order, studentId: this.$route.params.studentId },
+        };
+        // console.log(payPayload);
+        let self = this;
+        await user.payStudent(payPayload).then(() => {
+          if (self.appliedCopun) {
+            axios.put(`/school/updateNumberOfCopuns/1`).then(() => {
               self.$notify({
                 title: "Payment Successful",
                 type: "success",
@@ -104,12 +275,10 @@ export default {
                 self.$router.push({ name: "school-users-all" });
               }, "1000");
             });
-          },
-          onError: (err) => {
-            console.log(err);
-          },
-        })
-        .render(this.$refs.paypal);
+          }
+        });
+        this.loading = false;
+      }
     },
   },
   computed: {
