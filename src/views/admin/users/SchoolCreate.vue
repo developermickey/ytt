@@ -277,6 +277,8 @@ export default {
       }
 
       formData.append("store", parseInt(this.store));
+      formData.append("id", this.$route.query.id);
+
       let self = this;
       let error = false;
 

@@ -3,8 +3,8 @@
     <div v-if="loading">
       <Loader class="loader" :show="loading" :fixedPosition="false" />
     </div>
-    <u-card v-else style="min-height:500px">
-      <table key="tableKey" class="u-data-table ">
+    <u-card v-else style="min-height: 500px">
+      <table key="tableKey" class="u-data-table">
         <colgroup>
           <col v-for="column in columns" :key="column.value" />
         </colgroup>
@@ -66,7 +66,7 @@
               <div class="actions-col actions-cell">
                 <template v-if="item.needToPay">
                   <UBtn
-                    class=" mr-4"
+                    class="mr-4"
                     color="primary outline"
                     size="small"
                     :to="'/school/payment/' + item.id"
@@ -138,7 +138,16 @@
                     >
                     </UIconBtn>
                   </b-dropdown-item> -->
-
+                    <b-dropdown-item>
+                      <UIconBtn
+                        class="u-mx-1 qa-login-as-teacher-btn login-as-icon-btn"
+                        icon="icon-enter"
+                        icon-hover-color="blue"
+                        @click.native="onLoginAsUserClick(item)"
+                        title="Login as user"
+                      >
+                      </UIconBtn>
+                    </b-dropdown-item>
                     <b-dropdown-item>
                       <UIconBtn
                         class="u-mx-1 qa-edit-student-btn"
@@ -224,9 +233,7 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td class="u-text-center" colspan="4">
-              No data available
-            </td>
+            <td class="u-text-center" colspan="4">No data available</td>
           </tr>
         </tbody>
       </table>
@@ -252,7 +259,7 @@
       <template v-slot:comment>
         <textarea
           class="px-3 py-4"
-          style="font-size:24px;width:100%;"
+          style="font-size: 24px; width: 100%"
           name=""
           v-model="student.payloadData.comment"
           id=""

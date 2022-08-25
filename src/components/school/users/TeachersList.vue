@@ -48,7 +48,7 @@
                 </UBtn> -->
 
                 <!-- Dropdown -->
-                <!-- <b-dropdown no-caret>
+                <b-dropdown no-caret>
                   <template #button-content>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@
                     >
                     </UIconBtn>
                   </b-dropdown-item>
-                  <b-dropdown-item>
+                  <!-- <b-dropdown-item>
                     <UIconBtn
                       class="u-mx-1 qa-edit-teacher-btn"
                       :to="{
@@ -103,17 +103,15 @@
                       @click.native="deleteUserAlert(item)"
                     >
                     </UIconBtn>
-                  </b-dropdown-item>
-                </b-dropdown> -->
+                  </b-dropdown-item> -->
+                </b-dropdown>
               </div>
             </td>
           </tr>
         </tbody>
         <tbody v-else>
           <tr>
-            <td class="u-text-center" colspan="4">
-              No data available
-            </td>
+            <td class="u-text-center" colspan="4">No data available</td>
           </tr>
         </tbody>
       </table>
@@ -129,9 +127,9 @@
 </template>
 
 <script>
-// import { BDropdown, BDropdownItem } from "bootstrap-vue";
+import { BDropdown, BDropdownItem } from "bootstrap-vue";
 import UCard from "@/components/common/UCard";
-// import UIconBtn from "@/components/common/UIconBtn";
+import UIconBtn from "@/components/common/UIconBtn";
 // import SelectLesson from "@/components/modals/SelectLesson";
 import Loader from "@/components/Loader";
 
@@ -145,9 +143,9 @@ export default {
   components: {
     UCard,
     // SelectLesson,
-    // UIconBtn,
-    // BDropdown,
-    // BDropdownItem,
+    UIconBtn,
+    BDropdown,
+    BDropdownItem,
     Loader,
   },
   mixins: [DeleteUserMixin],
@@ -171,7 +169,7 @@ export default {
         breakpoint: false,
       },
       {
-        text: "",
+        text: "Action",
         value: "actions",
         breakpoint: false,
       },
