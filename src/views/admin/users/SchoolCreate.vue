@@ -50,7 +50,7 @@
                   <u-text-field
                     label="Principal Name"
                     placeholder="Principal Name"
-                    v-model.trim="school.principle_name"
+                    v-model.trim="school.principal_name"
                     :error="errors[0]"
                   >
                   </u-text-field>
@@ -239,7 +239,7 @@ export default {
   data: () => ({
     school: {
       name: "",
-      principle_name: "",
+      principal_name: "",
       phone: "",
       principal_phone: "",
       email: "",
@@ -277,7 +277,10 @@ export default {
       }
 
       formData.append("store", parseInt(this.store));
-      formData.append("id", this.$route.query.id);
+
+      if (this.$route.query.id) {
+        formData.append("id", this.$route.query.id);
+      }
 
       let self = this;
       let error = false;
@@ -320,7 +323,7 @@ export default {
       };
       await this.$store.dispatch("School/getSchoolInformationById", payload);
       this.school.name = this.schoolDetails.name;
-      this.school.principle_name = this.schoolDetails.principal_name;
+      this.school.principal_name = this.schoolDetails.principal_name;
       this.school.phone = this.schoolDetails.phone;
       this.school.principal_phone = this.schoolDetails.principal_phone;
       this.school.email = this.schoolDetails.email;
