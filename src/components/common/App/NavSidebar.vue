@@ -196,13 +196,20 @@ export default {
       [SCHOOL]: [
         {
           id: 1,
-          text: "Users",
-          to: { name: "school-users-all" },
-          icon: "icon-user-group",
+          text: "Lessons",
+          to: { name: "school-lessons-all" },
+          icon: "icon-file",
           active: true,
         },
         {
           id: 2,
+          text: "Users",
+          to: { name: "school-users-all" },
+          icon: "icon-user-group",
+          active: false,
+        },
+        {
+          id: 3,
           text: "Settings",
           to: {
             name: "school-settings",
@@ -212,21 +219,21 @@ export default {
           active: false,
         },
         {
-          id: 3,
+          id: 4,
           text: "Student Recording",
           to: { name: "school-audio" },
           icon: "icon-file",
           active: false,
         },
         {
-          id: 4,
+          id: 5,
           text: "Store",
           to: { name: "school-product-list" },
           icon: "icon-store",
           active: false,
         },
         {
-          id: 5,
+          id: 6,
           text: "Orders",
           to: { name: "school-order-list" },
           icon: "list-active",

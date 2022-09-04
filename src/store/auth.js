@@ -58,10 +58,7 @@ export default {
           router.push({ name: "auth-login" });
       };
 
-      axios
-        .post("/auth/logout")
-        .then(clearAuthData)
-        .catch(clearAuthData);
+      axios.post("/auth/logout").then(clearAuthData).catch(clearAuthData);
     },
     login(context, credentials) {
       context.commit("SET_LOADING", true);
@@ -185,7 +182,7 @@ export default {
         case STUDENT:
           return router.push({ name: "student-lessons-all" });
         case SCHOOL:
-          return router.push({ name: "school-users-all" });
+          return router.push({ name: "school-lessons-all" });
       }
     },
   },

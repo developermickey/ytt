@@ -130,6 +130,7 @@ export default {
           );
         }
       }
+      console.log(computedValue);
 
       return computedValue;
     },
@@ -159,6 +160,7 @@ export default {
         }
       } else {
         if (this.multiple) {
+          console.log("here");
           this.$emit("input", [...this.computedValue, item]);
         } else {
           this.$emit("input", item);

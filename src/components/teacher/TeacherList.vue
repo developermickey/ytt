@@ -1,21 +1,16 @@
 <!--used to display list of teachers on Lesson creation page -->
 <template>
   <div class="teacher-list">
-    <div
-      class="teacher-list__column"
-      v-for="item in value"
-      :key="item.id"
-    >
-      <div
-        class="teacher-list__item"
-      >
-        <div class="teacher-list__item-avatar" :style="getAvatarStyle(item)"></div>
+    <div class="teacher-list__column" v-for="item in value" :key="item.id">
+      <div class="teacher-list__item">
+        <div
+          class="teacher-list__item-avatar"
+          :style="getAvatarStyle(item)"
+        ></div>
         <span class="teacher-list__item-name">{{ item.name }}</span>
       </div>
     </div>
-    <div
-      class="teacher-list__column teacher-list__btn-column"
-      >
+    <div class="teacher-list__column teacher-list__btn-column">
       <button
         @click="showModal"
         class="teacher-list__add-btn"
@@ -29,18 +24,19 @@
       :value="value"
       @input="onSelectTeachers"
       multiple
+      :type="type"
     ></select-teacher>
   </div>
 </template>
 
 <script>
-import UCard from '@/components/common/UCard.vue';
-import UAutocomplete from '@/components/common/UAutocomplete/UAutocomplete.vue';
+import UCard from "@/components/common/UCard.vue";
+import UAutocomplete from "@/components/common/UAutocomplete/UAutocomplete.vue";
 
-import SelectTeacher from '@/components/modals/SelectTeacher';
+import SelectTeacher from "@/components/modals/SelectTeacher";
 
 // eslint-disable-next-line no-unused-vars
-import { UsersApi } from '@/api/users.api';
+import { UsersApi } from "@/api/users.api";
 
 export default {
   data: () => ({
@@ -50,7 +46,11 @@ export default {
     value: {
       type: Array,
       required: true,
-    }
+    },
+    type: {
+      type: String,
+      default: "",
+    },
   },
   components: {
     // eslint-disable-next-line vue/no-unused-components
@@ -60,39 +60,39 @@ export default {
     SelectTeacher,
   },
   methods: {
-    getAvatarStyle(item){
+    getAvatarStyle(item) {
       let style;
-      if(item.avatar){
-        style = { backgroundImage: `url(${item.avatar})`, }
+      if (item.avatar) {
+        style = { backgroundImage: `url(${item.avatar})` };
       }
       return style;
     },
-    showModal(){
-      this.$modal.show('select-teacher');
+    showModal() {
+      this.$modal.show("select-teacher");
     },
-    hideModal(){
-      this.$modal.hide('select-teacher');
+    hideModal() {
+      this.$modal.hide("select-teacher");
     },
-    onSelectTeachers(teachers){
-      this.$emit('input', teachers);
+    onSelectTeachers(teachers) {
+      this.$emit("input", teachers);
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
 @import "@/styles/vars";
 @import "@/styles/mixins";
 
-.teacher-list{
+.teacher-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  &__column{
+  &__column {
     flex-basis: calc(50% - 19px);
     margin-bottom: 17px;
   }
-  &__item{
+  &__item {
     height: 86px;
     display: flex;
     align-items: center;
@@ -104,7 +104,7 @@ export default {
     padding-right: 13px;
     padding-left: 100px;
   }
-  &__item-avatar{
+  &__item-avatar {
     height: 86px;
     width: 86px;
     border-radius: 50%;
@@ -113,11 +113,11 @@ export default {
     background-color: red;
     background-size: cover;
   }
-  &__item-name{
+  &__item-name {
     font-weight: 300;
   }
 
-  &__btn-column{
+  &__btn-column {
     min-height: 86px;
     display: flex;
     align-items: center;
@@ -140,18 +140,16 @@ export default {
   }
 }
 @include media(">phone", "<=tablet") {
-  .teacher-list{
-
-    &__item{
+  .teacher-list {
+    &__item {
       height: 47px;
       padding-left: 60px;
       width: 85%;
-      &-avatar{
+      &-avatar {
         height: 47px;
         width: 47px;
       }
     }
   }
 }
-
 </style>

@@ -51,6 +51,9 @@ export default {
   addAccessToLesson(userId, data) {
     return axios.post(`/admin/users/${userId}/lessons/access`, data);
   },
+  addAccessToLessonBySchool(userId, data) {
+    return axios.post(`/school/users/${userId}/lessons/access`, data);
+  },
 
   payStudent(payload) {
     console.log(payload);

@@ -96,6 +96,29 @@ export default {
           .then(() => context.commit("SET_LOADING", false));
       });
     },
+    createLessonForSchool(context, lesson) {
+      context.commit("SET_LOADING", true);
+
+      // const lessonData = new FormData();
+      // for(let field in lesson){
+      //     if(Array.isArray(lesson[field])){
+      //         for (let i = 0; i < lesson[field].length; i++) {
+      //             lessonData.append(`${field}[]`, lesson[field][i]);
+      //         }
+      //     }
+      //     else{
+      //         lessonData.append(field, lesson[field]);
+      //     }
+      // }
+
+      return new Promise((resolve, reject) => {
+        axios
+          .post("/school/lessons", lesson)
+          .then(resolve)
+          .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
+          .then(() => context.commit("SET_LOADING", false));
+      });
+    },
 
     fetchLesson({ commit }, { role, id }) {
       commit("SET_LOADING", true);
@@ -193,7 +216,6 @@ export default {
           .then(() => context.commit("SET_LOADING", false));
       });
     },
-
     deleteLesson(context, { lessonId }) {
       context.commit("SET_LOADING", true);
       return new Promise((resolve, reject) => {
@@ -213,6 +235,32 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .post(`/admin/lessons/${lessonId}/hide`)
+          .then(resolve)
+          .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
+          .then(() => context.commit("TOGGLE_HIDE_LESSON", lessonId))
+          .then(() => context.commit("SET_LOADING", false));
+      });
+    },
+
+    deleteLessonForSchool(context, { lessonId }) {
+      context.commit("SET_LOADING", true);
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`/school/lessons/${lessonId}`)
+          .then(() => {
+            context.commit("DELETE_LESSON", lessonId);
+            resolve();
+          })
+          .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
+          .then(() => context.commit("SET_LOADING", false));
+      });
+    },
+
+    hideLessonForSchool(context, { lessonId }) {
+      context.commit("SET_LOADING", true);
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`/school/lessons/${lessonId}/hide`)
           .then(resolve)
           .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
           .then(() => context.commit("TOGGLE_HIDE_LESSON", lessonId))

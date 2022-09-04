@@ -6,9 +6,9 @@
           <div class="u-flex is-align-center lessons--head">
             <div class="u-text-h1 u-mr-6">Lessons</div>
             <UBtn
-              :to="{ name: 'admin-lessons-create' }"
+              :to="{ name: 'school-lessons-create' }"
               id="create_lesson_link"
-              class="add-button-admin"
+              class="add-button-school"
               size="x-large"
               color="blue"
               :width="deviceWidth > 1250 ? 251 : 120"
@@ -36,7 +36,7 @@
                     >
                       {{ column.text }}
                     </th>
-                    <th v-else :key="index" class="table--head">
+                    <th v-else :key="index" class="u-text-center table--head">
                       {{ column.text }}
                     </th>
                   </template>
@@ -63,19 +63,19 @@
                   <td class="u-text-right u-pr-25 list--item--last">
                     <div class="u-flex is-justify-end">
                       <UBtn
-                        class="u-mr-5 admin-view-lesson-btn"
+                        class="u-mr-5 school-view-lesson-btn"
                         size="small"
                         color="blue"
                         outlined
                         :to="{
-                          name: 'admin-lessons-edit',
+                          name: 'school-lessons-edit',
                           params: { id: item.id },
                         }"
                       >
                         <span class="u-font-weight-regular">Edit lesson</span>
                       </UBtn>
                       <UBtn
-                        class="u-mx-1 qa-admin-add-teacher-to-lesson"
+                        class="u-mx-1 qa-school-add-teacher-to-lesson"
                         size="small"
                         color="primary"
                         @click="openSelectTeacherModal(item)"
@@ -83,14 +83,6 @@
                         <span class="u-font-weight-regular"
                           >Add to teacher</span
                         >
-                      </UBtn>
-                      <UBtn
-                        class="u-mx-1 qa-admin-add-teacher-to-lesson"
-                        size="small"
-                        color="primary"
-                        @click="openSelectTeacherModal(item, 'school')"
-                      >
-                        <span class="u-font-weight-regular">Add to School</span>
                       </UBtn>
 
                       <UIconBtn
@@ -127,36 +119,28 @@
       v-model="selectedTeachers"
       @save="shareLessonToTeacher"
       multiple
-    ></select-teacher>
-    <select-school
-      v-model="selectedSchool"
-      @save="shareLessonToSchool"
-      multiple
       type="school"
-    ></select-school>
+    ></select-teacher>
   </div>
 </template>
 
 <script>
 import { LessonsApi } from "@/api";
 import { mapActions, mapGetters } from "vuex";
-import { ADMIN } from "@/constants/roles";
+import { SCHOOL } from "@/constants/roles";
 import UCard from "@/components/common/UCard";
 import UIconBtn from "@/components/common/UIconBtn";
 
 import SelectTeacher from "@/components/modals/SelectTeacher";
-import SelectSchool from "@/components/modals/SelectSchool";
 
 export default {
   components: {
     UCard,
     SelectTeacher,
     UIconBtn,
-    SelectSchool,
   },
   data: () => ({
     selectedTeachers: [],
-    selectedSchool: [],
     selectedLesson: null,
     columns: [
       {
@@ -189,33 +173,24 @@ export default {
     },
   },
   methods: {
-    ...mapActions("Lessons", ["deleteLesson", "hideLesson", "fetchLessonList"]),
-    shareLessonToSchool() {
-      LessonsApi.addAccessToTeacher(this.selectedLesson.id, {
-        school: this.selectedSchool.map((item) => item.id),
-      }).then((response) => {
-        this.selectedLesson.school = response.data.schools;
-      });
-    },
+    ...mapActions("Lessons", [
+      "deleteLessonForSchool",
+      "hideLessonForSchool",
+      "fetchLessonList",
+    ]),
     shareLessonToTeacher() {
-      LessonsApi.addAccessToTeacher(this.selectedLesson.id, {
+      LessonsApi.addAccessToSchool(this.selectedLesson.id, {
         users: this.selectedTeachers.map((item) => item.id),
       }).then((response) => {
         this.selectedLesson.teachers = response.data.teachers;
       });
     },
-    openSelectTeacherModal(lesson, type) {
-      if (type === "school") {
-        this.selectedLesson = lesson;
-        if (lesson.schools) {
-          this.selectedSchool = [...lesson.schools];
-        }
-        this.$modal.show("select-school");
-      } else {
-        this.selectedLesson = lesson;
+    openSelectTeacherModal(lesson) {
+      this.selectedLesson = lesson;
+      if (lesson.teachers) {
         this.selectedTeachers = [...lesson.teachers];
-        this.$modal.show("select-teacher");
       }
+      this.$modal.show("select-teacher");
     },
     hideLessonToggleAlert(lesson) {
       this.selectedLesson = { ...lesson };
@@ -238,7 +213,7 @@ export default {
     },
     onConfirmHideLessonToggle() {
       console.log(this.selectedLesson);
-      this.hideLesson({
+      this.hideLessonForSchool({
         lessonId: this.selectedLesson.id,
       })
         .then(() => {
@@ -276,7 +251,7 @@ export default {
       );
     },
     onConfirmDeleteLesson() {
-      this.deleteLesson({
+      this.deleteLessonForSchool({
         lessonId: this.selectedLesson.id,
       })
         .then(() => {
@@ -296,7 +271,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchLessonList(ADMIN);
+    this.fetchLessonList(SCHOOL);
   },
 };
 </script>
@@ -309,7 +284,7 @@ tr:hover {
   .pages-col {
     color: #fff;
   }
-  .admin-view-lesson-btn {
+  .school-view-lesson-btn {
     color: #fff;
     &:hover {
       background-color: rgba(255, 255, 255, 0.09);
@@ -358,11 +333,11 @@ tr:hover {
   .list--item--last {
     padding-right: 0 !important;
   }
-  .add-button-admin {
+  .add-button-school {
     width: 154px;
     height: 34px;
   }
-  .admin-view-lesson-btn {
+  .school-view-lesson-btn {
     margin-right: 0 !important;
   }
   .qa-delete-lesson-btn {

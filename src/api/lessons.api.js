@@ -42,6 +42,9 @@ export default {
   addAccessToTeacher(lessonId, data) {
     return axios.post(`/admin/lessons/${lessonId}/users/access`, data);
   },
+  addAccessToSchool(lessonId, data) {
+    return axios.post(`/school/lessons/${lessonId}/users/access`, data);
+  },
 
   getLessonLogs(params) {
     return axios.get(`/teacher/lesson-logs`, {

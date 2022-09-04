@@ -11,6 +11,7 @@ import { SCHOOL } from "@/constants/roles";
 import routesExtendMeta from "@/router/routesExtendMeta";
 import ProductList from "@/views/school/products/ProductsList";
 import ProductCreate from "@/views/school/products/ProductCreate";
+import lessons from "./lessons";
 const routes = {
   path: "/school",
   component: School,
@@ -20,6 +21,7 @@ const routes = {
     roleAccess: SCHOOL,
   },
   children: [
+    lessons,
     user,
     settings,
     order,

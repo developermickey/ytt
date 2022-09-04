@@ -38,14 +38,14 @@
             <td class="grey-col">{{ item.phone }}</td>
             <td class="u-pr-25 u-text-right">
               <div class="actions-col actions-cell">
-                <!-- <UBtn
+                <UBtn
                   class="u-mx-1 qa-open-add-lesson-popup-btn"
                   color="primary"
                   size="small"
                   @click="openAddLessonPopup(item)"
                 >
                   Add lesson
-                </UBtn> -->
+                </UBtn>
 
                 <!-- Dropdown -->
                 <b-dropdown no-caret>
@@ -117,12 +117,12 @@
       </table>
     </u-card>
 
-    <!-- <select-lesson
+    <select-lesson
       v-model="selectedLessons"
       @save="addTeacherToLesson"
       multiple
     >
-    </select-lesson> -->
+    </select-lesson>
   </div>
 </template>
 
@@ -130,7 +130,7 @@
 import { BDropdown, BDropdownItem } from "bootstrap-vue";
 import UCard from "@/components/common/UCard";
 import UIconBtn from "@/components/common/UIconBtn";
-// import SelectLesson from "@/components/modals/SelectLesson";
+import SelectLesson from "@/components/modals/SelectLesson";
 import Loader from "@/components/Loader";
 
 import { UsersApi } from "@/api";
@@ -142,7 +142,7 @@ import DeleteUserMixin from "@/mixins/delete-user.mixin";
 export default {
   components: {
     UCard,
-    // SelectLesson,
+    SelectLesson,
     UIconBtn,
     BDropdown,
     BDropdownItem,
@@ -192,7 +192,7 @@ export default {
       this.$modal.show("select-lesson");
     },
     addTeacherToLesson() {
-      UsersApi.addAccessToLesson(this.selectedTeacher.id, {
+      UsersApi.addAccessToLessonBySchool(this.selectedTeacher.id, {
         lessons: this.selectedLessons.map((item) => item.id),
       }).then((response) => {
         this.selectedTeacher.lessons = response.data.lessons;
