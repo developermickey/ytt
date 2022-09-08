@@ -110,6 +110,7 @@ export default {
     numberOfCoupuns: "",
     numberOfUsedCopuns: 0,
     loading: false,
+    couponList: [],
   }),
   components: {
     Multiselect,
@@ -124,34 +125,56 @@ export default {
     },
   },
   methods: {
+    async getCouponList() {
+      let self = this;
+      self.loading = true;
+      await axios
+        .get("admin/getCopunsList")
+        .then((e) => (self.couponList = e.data.result));
+    },
     async submit() {
       let self = this;
-      const payload = {
-        copunName: this.copunName,
-        discountAmount: parseInt(this.discountAmount),
-        schoolId: this.schoolId.id,
-        numberOfCoupuns: parseInt(this.numberOfCoupuns),
-        numberOfUsedCopuns: parseInt(this.numberOfUsedCopuns),
-      };
-      this.loading = true;
-      const formData = new FormData();
-      for (let field in payload) formData.append(field, payload[field]);
+      self.loading = true;
+      await self.getCouponList();
+      const couponsForSchool = self.couponList.filter(
+        (x) => x.SchoolName === self.schoolId.name
+      );
+      const checkValidation = couponsForSchool.filter(
+        (x) => x.copunName === self.copunName
+      );
+      if (checkValidation.length === 0) {
+        const payload = {
+          copunName: self.copunName,
+          discountAmount: parseInt(self.discountAmount),
+          schoolId: self.schoolId.id,
+          numberOfCoupuns: parseInt(self.numberOfCoupuns),
+          numberOfUsedCopuns: parseInt(self.numberOfUsedCopuns),
+        };
 
-      await axios
-        .post("/admin/createCoupun", formData)
-        .then((e) => {
-          if (e.data.result) {
-            self.$router.push("/admin/coupon-list");
-          }
-        })
-        .catch(() => {
-          self.$notify({
-            title: "Coupon Already Exists",
-            type: "error",
+        const formData = new FormData();
+        for (let field in payload) formData.append(field, payload[field]);
+        await axios
+          .post("/admin/createCoupun", formData)
+          .then((e) => {
+            if (e.data.result) {
+              self.$router.push("/admin/coupon-list");
+            }
+          })
+          .catch(() => {
+            self.$notify({
+              title: "Coupon Already Exists",
+              type: "error",
+            });
+            self.loading = false;
           });
-          self.loading = false;
+      } else {
+        self.$notify({
+          title: "Coupon Name Already Exists ",
+          type: "error",
         });
-      this.loading = false;
+      }
+
+      self.loading = false;
     },
   },
 };

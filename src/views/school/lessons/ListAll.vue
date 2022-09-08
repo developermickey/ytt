@@ -47,6 +47,7 @@
                   v-for="item in items"
                   :key="item.id"
                   :class="{ 'lesson-item_hidden': !!item.hidden }"
+                  :style="{ backgroundColor: !item.ownLesson ? '#d3d3d3' : '' }"
                 >
                   <td class="u-pl-13 u-font-weight-light list--item--title">
                     <svg
@@ -66,13 +67,26 @@
                         class="u-mr-5 school-view-lesson-btn"
                         size="small"
                         color="blue"
+                        width="220"
                         outlined
                         :to="{
                           name: 'school-lessons-edit',
                           params: { id: item.id },
                         }"
+                        v-if="item.ownLesson"
                       >
-                        <span class="u-font-weight-regular">Edit lesson</span>
+                        <span class="u-font-weight-regular"> Edit Lesson </span>
+                      </UBtn>
+                      <UBtn
+                        class="u-mr-5 school-view-lesson-btn"
+                        size="small"
+                        color="gray"
+                        width="220"
+                        v-if="!item.ownLesson"
+                      >
+                        <span class="u-font-weight-regular">
+                          Admin Assigned
+                        </span>
                       </UBtn>
                       <UBtn
                         class="u-mx-1 qa-school-add-teacher-to-lesson"
@@ -93,6 +107,7 @@
                         bg-hover-color="white"
                         hoverable
                         @click.native="hideLessonToggleAlert(item)"
+                        v-if="item.ownLesson"
                       >
                       </UIconBtn>
                       <UIconBtn
@@ -103,6 +118,25 @@
                         bg-hover-color="white"
                         hoverable
                         @click.native="deleteLessonAlert(item)"
+                        v-if="item.ownLesson"
+                      >
+                      </UIconBtn>
+                      <UIconBtn
+                        class="u-mx-1 qa-hide-lesson-btn"
+                        icon=""
+                        icon-color=""
+                        icon-hover-color=""
+                        bg-hover-color=""
+                        v-if="!item.ownLesson"
+                      >
+                      </UIconBtn>
+                      <UIconBtn
+                        class="u-mx-1 qa-delete-lesson-btn"
+                        icon=""
+                        icon-color=""
+                        icon-hover-color=""
+                        bg-hover-color=""
+                        v-if="!item.ownLesson"
                       >
                       </UIconBtn>
                     </div>

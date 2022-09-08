@@ -108,22 +108,26 @@ export default {
           axios.get("/school/paymentConfiguration").then((res) => {
             self.payAmount = parseInt(res.data.payamount);
           });
-
           axios
             .get(`/school/validateCoupun/${this.user.school_id}`)
             .then((res) => {
-              if (res.data.response.hasCoupun === "true") {
-                self.numberOfCopuns = parseInt(
-                  res.data.response.numberOfCopuns
+              if (res.data.response.length > 0) {
+                res.data.response.forEach((element) => {
+                  element.discountAmmount = Number(element.discountAmmount);
+                  element.numberOfCopuns = Number(element.numberOfCopuns);
+                  element.numberOfUsedCopuns = Number(
+                    element.numberOfUsedCopuns
+                  );
+                });
+                // console.log(res.data.response);
+                const usableCoupon = res.data.response.filter(
+                  (x) => x.numberOfUsedCopuns < x.numberOfCopuns
                 );
-                self.usedCopuns = parseInt(
-                  res.data.response.numberOfUsedCopuns
-                );
-                self.discount = parseInt(res.data.response.discountAmmount);
 
-                if (self.usedCopuns < self.numberOfCopuns) {
+                if (usableCoupon.length > 0) {
                   self.hasCopun = true;
                   self.couponNameFromServer = res.data.response.copunName;
+                  self.validCopunList = usableCoupon;
                 }
               }
             });
@@ -157,6 +161,7 @@ export default {
       invalidCoupon: false,
       discount: "",
       appliedCopun: false,
+      validCopunList: [],
     };
   },
   methods: {
@@ -190,15 +195,17 @@ export default {
             };
             await user.payStudent(payload).then(() => {
               if (self.appliedCopun) {
-                axios.put(`/school/updateNumberOfCopuns/1`).then(() => {
-                  self.$notify({
-                    title: "Payment Successful",
-                    type: "success",
+                axios
+                  .put(`/school/updateNumberOfCopuns/1/${self.couponName}`)
+                  .then(() => {
+                    self.$notify({
+                      title: "Payment Successful",
+                      type: "success",
+                    });
+                    setTimeout(() => {
+                      self.$router.push({ name: "school-users-all" });
+                    }, "1000");
                   });
-                  setTimeout(() => {
-                    self.$router.push({ name: "school-users-all" });
-                  }, "1000");
-                });
               } else {
                 self.$notify({
                   title: "Payment Successful",
@@ -225,15 +232,28 @@ export default {
         this.couponError = true;
       } else {
         this.couponError = false;
-        if (this.couponNameFromServer !== this.couponName) {
-          this.invalidCoupon = true;
-        } else {
+        const couponFind = this.validCopunList.find(
+          (x) => this.couponName === x.copunName
+        );
+        console.log(couponFind);
+        if (couponFind) {
+          this.invalidCoupon = false;
+          this.discount = couponFind.discountAmmount;
           this.payAmount = this.payAmount - this.discount;
-
           this.appliedCopun = true;
           this.hasCopun = false;
           this.cancelModal();
+        } else {
+          this.invalidCoupon = true;
         }
+        // if (this.couponNameFromServer !== this.couponName) {
+        //   this.invalidCoupon = true;
+        // } else {
+        //   this.payAmount = this.payAmount - this.discount;
+        //   this.appliedCopun = true;
+        //   this.hasCopun = false;
+        //   this.cancelModal();
+        // }
       }
     },
     cancelModal() {
@@ -266,15 +286,17 @@ export default {
         let self = this;
         await user.payStudent(payPayload).then(() => {
           if (self.appliedCopun) {
-            axios.put(`/school/updateNumberOfCopuns/1`).then(() => {
-              self.$notify({
-                title: "Payment Successful",
-                type: "success",
+            axios
+              .put(`/school/updateNumberOfCopuns/1/${self.couponName}`)
+              .then(() => {
+                self.$notify({
+                  title: "Payment Successful",
+                  type: "success",
+                });
+                setTimeout(() => {
+                  self.$router.push({ name: "school-users-all" });
+                }, "1000");
               });
-              setTimeout(() => {
-                self.$router.push({ name: "school-users-all" });
-              }, "1000");
-            });
           }
         });
         this.loading = false;

@@ -150,7 +150,15 @@ export default {
         axios
           .get(`/${ROLE_MAP[role]}/lessons`)
           .then((response) => {
-            commit("SET_LESSONS_LIST", response.data);
+            response.data[1].forEach((element, index) => {
+              if (element === "yes") {
+                response.data[0][index]["ownLesson"] = true;
+              }
+            });
+            const ownedLesson = response.data[0].filter((x) => x.ownLesson);
+            const adminLesson = response.data[0].filter((x) => !x.ownLesson);
+            response.data[0] = [...ownedLesson, ...adminLesson];
+            commit("SET_LESSONS_LIST", response.data[0]);
             resolve();
           })
           .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))

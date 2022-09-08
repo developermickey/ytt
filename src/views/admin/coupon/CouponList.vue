@@ -89,7 +89,7 @@ export default {
     },
   },
   async mounted() {
-    await this.getOrdersList(this.orderStatus);
+    await this.getOrdersList();
   },
 };
 </script>
