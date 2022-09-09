@@ -242,7 +242,8 @@ export default {
           this.payAmount = this.payAmount - this.discount;
           this.appliedCopun = true;
           this.hasCopun = false;
-          this.cancelModal();
+          this.$modal.hide("comment-modal");
+          this.couponError = false;
         } else {
           this.invalidCoupon = true;
         }
@@ -284,8 +285,10 @@ export default {
         };
         // console.log(payPayload);
         let self = this;
+        console.log(this.couponName);
         await user.payStudent(payPayload).then(() => {
           if (self.appliedCopun) {
+            console.log(self.couponName);
             axios
               .put(`/school/updateNumberOfCopuns/1/${self.couponName}`)
               .then(() => {
