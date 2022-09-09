@@ -20,19 +20,19 @@ export default {
   components: {
     ContentContainer,
     StudentsList,
-    GiveCoins
-  }
-}
+    GiveCoins,
+  },
+};
 </script>
 
 <style lang="scss">
 @import "@/styles/mixins";
 
 @include media(">phone", "<=tablet") {
-  .teacher-students-list-view{
+  .teacher-students-list-view {
     padding-top: 30px;
 
-    &__header{
+    &__header {
       padding-left: 15px;
       margin-bottom: 20px;
     }

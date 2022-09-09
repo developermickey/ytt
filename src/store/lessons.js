@@ -150,16 +150,22 @@ export default {
         axios
           .get(`/${ROLE_MAP[role]}/lessons`)
           .then((response) => {
-            response.data[1].forEach((element, index) => {
-              if (element === "yes") {
-                response.data[0][index]["ownLesson"] = true;
-              }
-            });
-            const ownedLesson = response.data[0].filter((x) => x.ownLesson);
-            const adminLesson = response.data[0].filter((x) => !x.ownLesson);
-            response.data[0] = [...ownedLesson, ...adminLesson];
-            commit("SET_LESSONS_LIST", response.data[0]);
-            resolve();
+            // check for schools own lesson
+            if (role === 4) {
+              response.data[1].forEach((element, index) => {
+                if (element === "yes") {
+                  response.data[0][index]["ownLesson"] = true;
+                }
+              });
+              const ownedLesson = response.data[0].filter((x) => x.ownLesson);
+              const adminLesson = response.data[0].filter((x) => !x.ownLesson);
+              response.data[0] = [...ownedLesson, ...adminLesson];
+              commit("SET_LESSONS_LIST", response.data[0]);
+              resolve();
+            } else {
+              commit("SET_LESSONS_LIST", response.data);
+              resolve();
+            }
           })
           .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
           .then(() => commit("SET_LOADING", false));

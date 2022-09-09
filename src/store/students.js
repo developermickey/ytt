@@ -64,7 +64,7 @@ export default {
         url = `/${ROLE_MAP[ADMIN]}/users`;
         params.role = STUDENT;
         params.perPage = 20;
-      } else if (payload.role === TEACHER) {
+      } else if (payload.role === 2) {
         url = `/${ROLE_MAP[TEACHER]}/students`;
       } else if (payload.role === SCHOOL) {
         url = `/school/students?role=3`;

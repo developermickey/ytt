@@ -38,7 +38,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import UCard from "@/components/common/UCard.vue";
 import UAutocomplete from "@/components/common/UAutocomplete/UAutocomplete.vue";
-
+import { TEACHER } from "@/constants/roles";
 export default {
   components: {
     UCard,
@@ -85,7 +85,10 @@ export default {
     },
   },
   mounted() {
-    this.getItems(this.userRole);
+    let payload = {
+      role: TEACHER,
+    };
+    this.getItems(payload);
   },
   beforeDestroy() {
     this.RESET_STUDENTS_LIST();
