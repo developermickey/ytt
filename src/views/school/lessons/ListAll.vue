@@ -73,11 +73,12 @@
                           name: 'school-lessons-edit',
                           params: { id: item.id },
                         }"
-                        v-if="item.ownLesson"
+                        
                       >
                         <span class="u-font-weight-regular"> Edit Lesson </span>
                       </UBtn>
-                      <UBtn
+                      <!-- v-if="item.ownLesson" -->
+                      <!-- <UBtn
                         class="u-mr-5 school-view-lesson-btn"
                         size="small"
                         color="gray"
@@ -87,7 +88,7 @@
                         <span class="u-font-weight-regular">
                           Admin Assigned
                         </span>
-                      </UBtn>
+                      </UBtn> -->
                       <UBtn
                         class="u-mx-1 qa-school-add-teacher-to-lesson"
                         size="small"
