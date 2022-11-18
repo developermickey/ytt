@@ -52,9 +52,7 @@
       </u-card>
 
       <div class="text-center my-5">
-        <UBtn @click="bulkEdit">
-          Save
-        </UBtn>
+        <UBtn @click="bulkEdit"> Save </UBtn>
       </div>
     </div>
   </div>
@@ -131,6 +129,7 @@ export default {
       await this.fetchLesson({
         role: this.userRole,
         id: this.$route.params.id,
+        userId: this.user.id,
       });
     },
 

@@ -120,11 +120,19 @@ export default {
       });
     },
 
-    fetchLesson({ commit }, { role, id }) {
+    fetchLesson({ commit }, { role, id, userId }) {
       commit("SET_LOADING", true);
+      let url = `/${ROLE_MAP[role]}/lessons/${id}`;
+      if (
+        ROLE_MAP[role] === "teacher" ||
+        ROLE_MAP[role] === "student" ||
+        ROLE_MAP[role] === "school"
+      ) {
+        url = `/getAllData?user_id=${userId}&lession_id=${id}`;
+      }
       return new Promise((resolve, reject) => {
         axios
-          .get(`/${ROLE_MAP[role]}/lessons/${id}`)
+          .get(url)
           .then((response) => {
             setFetchedLesson({ commit }, response.data);
             resolve(response.data);

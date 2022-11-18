@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     ...mapGetters("Lessons", ["lesson", "loading", "editLesson"]),
-    ...mapGetters("Auth", ["userRole"]),
+    ...mapGetters("Auth", ["userRole", "user"]),
   },
   watch: {
     // eslint-disable-next-line no-unused-vars
@@ -132,7 +132,9 @@ export default {
       "RESET_EDIT_LESSON",
     ]),
     async fetchLesson({ id }) {
-      return await axios.get(`/school/lessons/${id}`);
+      return await axios.get(
+        `getAllData?user_id=${this.user.id}&lession_id=${id}`
+      );
     },
     async sendLesson({ id }, data) {
       return await axios.put(`/school/lessons/${id}`, data);

@@ -3,37 +3,37 @@
     <table class="table">
       <thead>
         <tr>
-          <th style="width: 70px;"></th>
-          <th scope="col" style="width: 70px;">#</th>
-          <th scope="col" style="width: 20%;">Hebrew</th>
-          <th scope="col" style="width: 20%;">Translations</th>
-          <th scope="col" >Quote</th>
-          <th scope="col" style="width: 240px;">Image</th>
-          <th scope="col" style="width: 70px;">Actions</th>
+          <th style="width: 70px"></th>
+          <th scope="col" style="width: 70px">#</th>
+          <th scope="col" style="width: 20%">Hebrew</th>
+          <th scope="col" style="width: 20%">Translations</th>
+          <th scope="col">Quote</th>
+          <th scope="col" style="width: 240px">Image</th>
+          <th scope="col" style="width: 70px">Actions</th>
         </tr>
       </thead>
-      <draggable 
+      <draggable
         :list="tableRows"
         @input="updateRows"
-        tag="tbody" 
+        tag="tbody"
         handle=".table__drag-icon"
       >
-          <LessonTableRow 
-            v-for="(row, index) in tableRows" 
-            :key="row.order" 
-            :row="row"
-            :rowIndex="index"
-            @updateImages="updateImages"
-            @deleteRow="deleteRow"
-          />
+        <LessonTableRow
+          v-for="(row, index) in tableRows"
+          :key="index"
+          :row="row"
+          :rowIndex="index"
+          @updateImages="updateImages"
+          @deleteRow="deleteRow"
+        />
       </draggable>
-      <AddLessonTableRow 
+      <AddLessonTableRow
         v-if="showAddRow"
         :tableRows="tableRows"
         @addNewRow="addNewRow"
       />
     </table>
-    <div 
+    <div
       class="add-row-btn u-col-12 u-flex is-justify-center"
       @click="showAddRow = true"
     >
@@ -47,17 +47,17 @@ import draggable from "vuedraggable";
 import LessonTableRow from "@/components/lessons/LessonTableRow";
 import AddLessonTableRow from "@/components/lessons/AddLessonTableRow";
 export default {
-  name: 'ImportLessonTable',
+  name: "ImportLessonTable",
   components: {
     draggable,
     LessonTableRow,
-    AddLessonTableRow
+    AddLessonTableRow,
   },
   props: {
     tableRows: {
       type: Array,
       default: () => null,
-    }
+    },
   },
   data: () => ({
     drag: false,
@@ -75,46 +75,46 @@ export default {
       this.showAddRow = false;
     },
     updateRows(newArr) {
-      this.$emit('updateRows', newArr);
-    }
-  }
-}
+      this.$emit("updateRows", newArr);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/vars';
+@import "@/styles/vars";
 .table {
   width: 100%;
-  border-collapse:separate; 
+  border-collapse: separate;
   border-spacing: 0 5px;
   tr {
-    border: 1px solid #DFDFDF;
+    border: 1px solid #dfdfdf;
   }
   thead {
-    background: #DFDFDF;
+    background: #dfdfdf;
     tr {
       border: none;
     }
     th {
       height: 80px;
       vertical-align: middle;
-      border: 0.8px solid #FFFFFF;
+      border: 0.8px solid #ffffff;
       border-top: none;
     }
     th:first-child {
-      border-radius:20px 0 0 0;
+      border-radius: 20px 0 0 0;
       border-left: none;
     }
     th:last-child {
-      border-radius:0 20px 0 0;
+      border-radius: 0 20px 0 0;
       border-right: none;
     }
   }
   td {
-    border: 1px solid #DFDFDF;
+    border: 1px solid #dfdfdf;
   }
 }
-.add-row-btn{
+.add-row-btn {
   background-color: $clr-primary;
   color: #fff;
   font-weight: bold;

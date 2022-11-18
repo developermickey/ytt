@@ -4,17 +4,23 @@
       <BackBtn class="shuffle-lesson-view__back-btn"></BackBtn>
       <div class="u-text-h2">Lesson</div>
 
-      <LessonTimer class="shuffle-lesson-view__timer" v-if="sliderMode && displayLessonTimer"/>
-      <div class="shuffle-lesson-view__checkboxes" v-if="sliderMode && displayHidings">
-        <UCheckbox 
-          class="shuffle-lesson-view__checkbox" 
+      <LessonTimer
+        class="shuffle-lesson-view__timer"
+        v-if="sliderMode && displayLessonTimer"
+      />
+      <div
+        class="shuffle-lesson-view__checkboxes"
+        v-if="sliderMode && displayHidings"
+      >
+        <UCheckbox
+          class="shuffle-lesson-view__checkbox"
           :value="hideLessonImages"
           @input="UPDATE_HIDE_LESSON_IMAGE"
         >
           Hide Images
         </UCheckbox>
-        <UCheckbox 
-          class="shuffle-lesson-view__checkbox" 
+        <UCheckbox
+          class="shuffle-lesson-view__checkbox"
           :value="hideLessonTranslations"
           @input="UPDATE_HIDE_LESSON_TRANSLATION"
         >
@@ -52,18 +58,15 @@
     </div>
 
     <div class="shuffle-lesson-view__player" v-if="!displayVoiceRecord">
-      <UAudioPlayer :value="recordUrl" v-if="recordUrl"/>
+      <UAudioPlayer :value="recordUrl" v-if="recordUrl" />
     </div>
     <div class="shuffle-lesson-view__submit-row" v-if="displayVoiceRecord">
-      <VoiceRecordSubmit
-        @after-submit="onAfterSubmit"
-      ></VoiceRecordSubmit>
+      <VoiceRecordSubmit @after-submit="onAfterSubmit"></VoiceRecordSubmit>
     </div>
     <div class="shuffle-lesson-view__log-history">
-      <LessonLogHistory v-if="sliderMode && displayLogs"/>
+      <LessonLogHistory v-if="sliderMode && displayLogs" />
     </div>
-    <LessonResult/>
-
+    <LessonResult />
   </ContentContainer>
 </template>
 
@@ -75,11 +78,11 @@ import BackBtn from "@/components/common/BackBtn";
 import ShuffleWordsView from "@/components/lessons/ShuffleWordsView";
 import VoiceRecordSubmit from "@/components/partials/PassLesson/VoiceRecordSubmit";
 import UAudioPlayer from "@/components/common/UAudioPlayer";
-import UCheckbox from '@/components/common/UCheckbox.vue';
-import LessonResult from '@/components/modals/LessonResult';
+import UCheckbox from "@/components/common/UCheckbox.vue";
+import LessonResult from "@/components/modals/LessonResult";
 import LessonLogHistory from "@/components/lessons/LessonLogHistory";
 
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from "vuex";
 // import { SHUFFLED_WORDS } from "@/constants/words";
 
 export default {
@@ -122,8 +125,8 @@ export default {
     },
     shouldFetchLesson: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data: () => ({
     sliderMode: false,
@@ -132,72 +135,84 @@ export default {
     hideTranslation: false,
   }),
   computed: {
-    ...mapGetters('Words', ['shuffleBottomEdge', 'shuffleTopEdge']),
-    ...mapGetters('Auth', ['userRole']),
-    ...mapGetters('Lessons', ['lesson', 'hideLessonImages', 'hideLessonTranslations']),
-    recordUrl(){
+    ...mapGetters("Words", ["shuffleBottomEdge", "shuffleTopEdge"]),
+    ...mapGetters("Auth", ["userRole", "user"]),
+    ...mapGetters("Lessons", [
+      "lesson",
+      "hideLessonImages",
+      "hideLessonTranslations",
+    ]),
+    recordUrl() {
       let recordUrl = null;
-      if(this.lesson !== null && this.lesson.records && this.lesson.records.length){
+      if (
+        this.lesson !== null &&
+        this.lesson.records &&
+        this.lesson.records.length
+      ) {
         recordUrl = this.lesson.records[0].url;
       }
       return recordUrl;
-    }
+    },
   },
   methods: {
-    ...mapActions('Lessons', ['sendRecord', 'fetchLesson']),
-    ...mapMutations('Lessons', ['RESET_LESSON_TIME', 'UPDATE_HIDE_LESSON_IMAGE', 'UPDATE_HIDE_LESSON_TRANSLATION']),
-    ...mapMutations('Words', {
-      SHUFFLE: 'SHUFFLE',
-      RESET_WORDS: 'RESET',
-      SET_TAB: 'SET_TAB',
-      RESET_COUNT_INDEX_FOR_TIMER: 'RESET_COUNT_INDEX_FOR_TIMER'
+    ...mapActions("Lessons", ["sendRecord", "fetchLesson"]),
+    ...mapMutations("Lessons", [
+      "RESET_LESSON_TIME",
+      "UPDATE_HIDE_LESSON_IMAGE",
+      "UPDATE_HIDE_LESSON_TRANSLATION",
+    ]),
+    ...mapMutations("Words", {
+      SHUFFLE: "SHUFFLE",
+      RESET_WORDS: "RESET",
+      SET_TAB: "SET_TAB",
+      RESET_COUNT_INDEX_FOR_TIMER: "RESET_COUNT_INDEX_FOR_TIMER",
     }),
-    handleShuffle(){
+    handleShuffle() {
       this.SHUFFLE();
       // this.sliderMode = true;
     },
-    onAfterSubmit(){
-      this.$router.push({ name: 'student-lessons-all' });
+    onAfterSubmit() {
+      this.$router.push({ name: "student-lessons-all" });
     },
-    onTabChange(tabId){
+    onTabChange(tabId) {
       this.SET_TAB(tabId);
-    }
+    },
   },
-  mounted(){
-    if(this.shouldFetchLesson)
+  mounted() {
+    if (this.shouldFetchLesson)
       this.fetchLesson({
         role: this.userRole,
         id: this.$route.params.id,
-      })
-        .catch(({ message }) => {
-          this.$notify({
-            title: 'Lesson load error',
-            text: message,
-            type: 'error'
-          });
+        userId: this.user.id,
+      }).catch(({ message }) => {
+        this.$notify({
+          title: "Lesson load error",
+          text: message,
+          type: "error",
         });
+      });
   },
   beforeDestroy() {
     this.RESET_WORDS();
     this.RESET_LESSON_TIME();
     this.RESET_COUNT_INDEX_FOR_TIMER();
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/mixins';
+@import "@/styles/mixins";
 
-.shuffle-lesson-view{
-  &__header{
+.shuffle-lesson-view {
+  &__header {
     position: relative;
     display: flex;
     flex-wrap: wrap;
   }
-  &__back-btn{
+  &__back-btn {
     margin-right: 20px;
   }
-  &__words-view{
+  &__words-view {
     margin-top: 30px;
     margin-bottom: 30px;
   }
@@ -209,14 +224,14 @@ export default {
   &__checkbox {
     margin-right: 20px;
   }
-  &__shuffle-btn-wrap{
+  &__shuffle-btn-wrap {
     display: flex;
     justify-content: center;
 
     margin-bottom: 30px;
   }
 
-  &__player{
+  &__player {
     display: flex;
     justify-content: center;
   }
@@ -226,18 +241,17 @@ export default {
 }
 
 @include media(">phone", "<=tablet") {
-  .shuffle-lesson-view{
-    &__back-btn{
+  .shuffle-lesson-view {
+    &__back-btn {
       margin-top: 29px;
       margin-left: 10px;
       margin-bottom: 30px;
       font-size: 14px;
       width: 100%;
-
     }
-    &__header{
+    &__header {
       margin-bottom: 30px;
-      .u-text-h2{
+      .u-text-h2 {
         padding-left: 14px;
       }
     }
