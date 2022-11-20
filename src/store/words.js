@@ -110,9 +110,9 @@ export default {
       { studentId, lessonId, isLessonCheck }
     ) {
       let url = `/teacher/students/${studentId}/lessons/${lessonId}/words/update`;
-      if (isLessonCheck) {
-        url += "/words";
-      }
+      // if (isLessonCheck) {
+      //   url += "/words";
+      // }
 
       const words = state.words.map((item) => {
         var data = {
