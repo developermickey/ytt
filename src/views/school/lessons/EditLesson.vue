@@ -245,8 +245,9 @@ export default {
       });
     },
     deleteRow(rowOrder) {
-      let index = this.tableRows.findIndex((row) => row.order === rowOrder);
-      this.tableRows[index].delete = true;
+      // let index = this.tableRows.findIndex((row) => row.order === rowOrder);
+      // this.tableRows[index].delete = true;
+      this.tableRows = this.tableRows.filter((x) => x.order !== rowOrder);
     },
     addNewRow(row) {
       this.tableRows.push(row);
