@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   KNOWN_WORDS,
   UNKNOWN_WORDS,
   ALL_WORDS,
   SHUFFLED_WORDS,
   MASTERED_WORDS,
-} from "@/constants/words";
-import ErrorHelper from "@/helpers/ErrorHelper";
+} from '@/constants/words';
+import ErrorHelper from '@/helpers/ErrorHelper';
 
 const getDefaultState = () => ({
   words: [],
@@ -64,19 +64,19 @@ export default {
 
         return item;
       });
-      console.log("state.words:", state.words);
+      console.log('state.words:', state.words);
 
       state.wordsToggled.forEach((word) => {
         if (word.id === wordId && word.status !== status) {
           word.status = status;
         }
       });
-      console.log("state.wordsToggled:", state.wordsToggled);
+      console.log('state.wordsToggled:', state.wordsToggled);
 
       if (state.wordsToggled.indexOf(wordId) === -1) {
         state.wordsToggled.push(wordId);
       }
-      console.log("state.wordsToggled:", state.wordsToggled);
+      console.log('state.wordsToggled:', state.wordsToggled);
     },
     SET_LOADING(state, payload) {
       state.loading = payload;
@@ -85,14 +85,14 @@ export default {
       state.lastWord = payload;
     },
     SHUFFLE(state) {
-      let words = this.getters["Words/words"].filter(
+      let words = this.getters['Words/words'].filter(
         (word) =>
           word.serial >= state.shuffleBottomEdge &&
           word.serial <= state.shuffleTopEdge
       );
       words.sort(() => Math.random() - 0.5);
       state.wordsShuffled = words;
-      this.commit("Words/SET_TAB", SHUFFLED_WORDS);
+      this.commit('Words/SET_TAB', SHUFFLED_WORDS);
     },
     RESET(state) {
       Object.assign(state, getDefaultState());
@@ -124,13 +124,13 @@ export default {
         }
         if (item.image_default_id) {
           data.default_word_image_id = item.image_default_id;
-          console.log("test");
+          console.log('test');
         }
         console.log(item);
         console.log(data);
         return data;
       });
-      commit("SET_LOADING", true);
+      commit('SET_LOADING', true);
       return new Promise((resolve, reject) => {
         axios
           .post(url, {
@@ -140,8 +140,8 @@ export default {
           .then(resolve)
           .catch((err) => reject(ErrorHelper.getErrorWithMessage(err)))
           .then(() => {
-            commit("RESET_TOGGLED_WORDS");
-            commit("SET_LOADING", false);
+            commit('RESET_TOGGLED_WORDS');
+            commit('SET_LOADING', false);
           });
       });
     },
@@ -176,6 +176,11 @@ export default {
     //       });
     //   });
     // },
+    async setDefaultImageOfSlider(context, payload) {
+      return await axios.get(
+        `/getAllData?user_id=${payload.userId}&lession_id=${payload.lessonId}&word_id=${payload.wordId}&image_url=${payload.imageUrl}`
+      );
+    },
   },
   getters: {
     loading: (state) => state.loading,
@@ -184,11 +189,11 @@ export default {
     words: (state) => {
       switch (state.tab) {
         case KNOWN_WORDS:
-          return state.words.filter((item) => item.status === "known");
+          return state.words.filter((item) => item.status === 'known');
         case UNKNOWN_WORDS:
-          return state.words.filter((item) => item.status === "unknown");
+          return state.words.filter((item) => item.status === 'unknown');
         case MASTERED_WORDS:
-          return state.words.filter((item) => item.status === "mastered");
+          return state.words.filter((item) => item.status === 'mastered');
         case SHUFFLED_WORDS:
           return state.wordsShuffled;
         case ALL_WORDS:
@@ -199,11 +204,11 @@ export default {
     shuffleBottomEdge: (state) => state.shuffleBottomEdge,
     shuffleTopEdge: (state) => state.shuffleTopEdge,
     knownWords: (state) =>
-      state.words.filter((item) => item.status === "known"),
+      state.words.filter((item) => item.status === 'known'),
     unknownWords: (state) =>
-      state.words.filter((item) => item.status === "unknown"),
+      state.words.filter((item) => item.status === 'unknown'),
     masteredWords: (state) =>
-      state.words.filter((item) => item.status === "mastered"),
+      state.words.filter((item) => item.status === 'mastered'),
     wordsToggled: (state) => state.wordsToggled,
     lastWord: (state) => state.lastWord,
     countIndexForTimer: (state) => state.countIndexForTimer,
