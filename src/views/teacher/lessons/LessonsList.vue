@@ -129,7 +129,12 @@ export default {
     ...mapMutations('Lessons', ['RESET_LESSONS_LIST']),
     getItems() {
       LessonsApi.getPage({}, 'teacher').then((response) => {
-        this.items = response.data[0];
+        let filteredList = response.data[0]?.filter((x) =>
+          x?.teachers?.some(
+            (y) => y?.pivot?.user_id == this.$store?.state.Auth?.user?.id
+          )
+        );
+        this.items = filteredList;
       });
     },
     shareLessonToStudent() {
