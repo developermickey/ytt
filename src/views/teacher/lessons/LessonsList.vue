@@ -90,11 +90,11 @@
 </template>
 
 <script>
-import { LessonsApi } from "@/api";
-import { mapActions, mapMutations } from "vuex";
-import UCard from "@/components/common/UCard";
+import { LessonsApi } from '@/api';
+import { mapActions, mapMutations } from 'vuex';
+import UCard from '@/components/common/UCard';
 
-import SelectStudent from "@/components/modals/SelectStudent";
+import SelectStudent from '@/components/modals/SelectStudent';
 
 export default {
   components: {
@@ -107,29 +107,34 @@ export default {
     selectedLesson: null,
     columns: [
       {
-        text: "Name",
-        value: "name",
+        text: 'Name',
+        value: 'name',
         breakpoint: false,
       },
       {
-        text: "Lessons",
-        value: "pages",
+        text: 'Lessons',
+        value: 'pages',
         breakpoint: false,
       },
       {
-        text: "",
-        value: "actions",
+        text: '',
+        value: 'actions',
         breakpoint: false,
       },
     ],
   }),
   computed: {},
   methods: {
-    ...mapActions("Lessons", ["addAccessForStudents"]),
-    ...mapMutations("Lessons", ["RESET_LESSONS_LIST"]),
+    ...mapActions('Lessons', ['addAccessForStudents']),
+    ...mapMutations('Lessons', ['RESET_LESSONS_LIST']),
     getItems() {
-      LessonsApi.getPage({}, "teacher").then((response) => {
-        this.items = response.data;
+      LessonsApi.getPage({}, 'teacher').then((response) => {
+        let filteredList = response.data[0]?.filter((x) =>
+          x?.teachers?.some(
+            (y) => y?.pivot?.user_id == this.$store?.state.Auth?.user?.id
+          )
+        );
+        this.items = filteredList;
       });
     },
     shareLessonToStudent() {
@@ -139,22 +144,22 @@ export default {
       })
         .then(() => {
           this.$notify({
-            title: "Lesson saved",
-            type: "success",
+            title: 'Lesson saved',
+            type: 'success',
           });
         })
         .catch(({ message }) => {
           this.$notify({
-            title: "Error",
+            title: 'Error',
             text: message,
-            type: "error",
+            type: 'error',
           });
         });
     },
     openSelectStudentModal(lesson) {
       this.selectedLesson = lesson;
       this.selectedStudents = [...lesson.students];
-      this.$modal.show("select-student");
+      this.$modal.show('select-student');
     },
   },
   mounted() {
@@ -167,8 +172,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/vars";
-@import "@/styles/mixins";
+@import '@/styles/vars';
+@import '@/styles/mixins';
 
 tr:hover .pages-col {
   color: #fff;
@@ -178,7 +183,7 @@ tr:hover .pages-col {
   color: $clr-grey;
 }
 
-@include media(">phone", "<=tablet") {
+@include media('>phone', '<=tablet') {
   .select--student,
   .button--view {
     width: 95px;
